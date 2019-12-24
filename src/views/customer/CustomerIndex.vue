@@ -2,9 +2,7 @@
     <div id="customer-index">
         <div>
           <span class="component-heading">Customer List</span>
-          <!--
           <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>                
-          -->
         </div>
         <table id="customer-table" class="table table-striped table-bordered">
           <thead>
@@ -62,7 +60,7 @@
 import baseUrl from '../../globalvars.js'
 
 export default {
-  name: 'index',
+  name: 'CustomerIndex',
   data() {
     return {
       customers: [],
@@ -74,17 +72,17 @@ export default {
     }
   },
   computed: {
-    pageCount: function() {
+    pageCount() {
       return Math.ceil(this.customers.length / this.pageSize);
     },
-    currentPageCustomers: function() {
+    currentPageCustomers() {
       let startIndex = (this.currentPage - 1) * this.pageSize;
       let endIndex = this.currentPage * this.pageSize;
       return this.customers.slice(startIndex, endIndex);
     }
   },
   methods: {
-    fetchData: function() {
+    fetchData() {
       window.axios.get(baseUrl)
       .then(response => {
         this.customers = response.data;
@@ -96,29 +94,29 @@ export default {
       //.then(response => {this.customers = response.data; console.log(this.customers)})
       .catch(error => console.log(error))
     },
-    initPageList: function() {
+    initPageList() {
       for(let i = 0; i < this.pageCount; i++) {
         this.pageList.push(i + 1);
       }
-      console.log(this.pageList);
+      //console.log(this.pageList);
     },
-    incrementPage: function() {
+    incrementPage() {
       if (this.currentPage < this.pageCount) {
         this.currentPage++;
       }
     },
-    decrementPage: function() {
+    decrementPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    firstPage: function() {
+    firstPage() {
       this.currentPage = 1;
     },
-    lastPage: function() {
+    lastPage() {
       this.currentPage = this.pageCount;
     },
-    toggleSort: function() {
+    toggleSort() {
       this.ascSort = !this.ascSort;
       if (this.ascSort) {
         this.sortArrow = "&#9652;"; // up arrow
@@ -129,7 +127,7 @@ export default {
         this.customers.sort(this.compareLastNamesDesc);
       }
     },
-    compareLastNamesAsc: function(a, b) {
+    compareLastNamesAsc(a, b) {
       if ( a.lastName < b.lastName ){
         return -1;
       }
@@ -138,7 +136,7 @@ export default {
       }
       return 0;
     },
-    compareLastNamesDesc: function(a, b) {
+    compareLastNamesDesc(a, b) {
       if ( a.lastName > b.lastName ){
         return -1;
       }
@@ -161,7 +159,7 @@ export default {
 
   #current-page {
     display: inline-block;
-    margin: 25px 0 15px 10px;
+    margin: 21px 0 19px 10px;
     vertical-align: top;
   }
 </style>
