@@ -48,7 +48,12 @@
             <div class="form-group">
                 <label for="state" class="col-md-offset-2 col-md-2">State</label>
                 <div class="col-md-4">
+                    <select class="form-control" v-model="customer.state">
+                        <option v-for="state in stateList" v-bind:key="state">{{state}}</option>
+                    </select>
+                    <!--
                     <input type="input" class="form-control" id="state" v-model="customer.state">
+                    -->
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -120,12 +125,19 @@
                     name: '',
                     street: '',
                     city: '',
-                    state: '',
+                    state: 'Colorado',
                     zipcode: '',
                     homePhone: '',
                     workPhone: '',
                     email: ''
                 },
+                stateList: [
+                    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+                    "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+                    "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+                    "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+                    "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+                ],
                 validationErrors: []
             }
         },
@@ -165,7 +177,7 @@
                     url: baseUrl,
                     data: JSON.stringify(this.customer)
                 })
-                    .then( () => {
+                    .then(() => {
                         // Redirect back to Index view
                         this.$router.push({ name: 'customerIndex' });
                     })
