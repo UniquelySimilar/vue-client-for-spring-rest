@@ -9,7 +9,8 @@
         <table id="customer-table" class="table table-striped table-bordered">
           <thead>
             <tr>
-              <th>Name<span v-html="sortArrow" v-on:click="toggleSort()" style="float: right; cursor: pointer;"></span></th>
+              <th>Last Name<span v-html="sortArrow" v-on:click="toggleSort()" style="float: right; cursor: pointer;"></span></th>
+              <th>First Name</th>
               <th>City</th>
               <th>State</th>
               <th>Zipcode</th>
@@ -18,7 +19,8 @@
           </thead>
           <tbody>
             <tr v-for="customer in currentPageCustomers" v-bind:key="customer.id">
-              <td>{{customer.name}}</td>
+              <td>{{customer.lastName}}</td>
+              <td>{{customer.firstName}}</td>
               <td>{{customer.city}}</td>
               <td>{{customer.state}}</td>
               <td>{{customer.zipcode}}</td>
@@ -47,7 +49,13 @@
             </li>
           </ul>
         </nav>
-      </div>
+        <div id="current-page">
+          <label>Current page:</label>
+          <select v-model="currentPage">
+            <option v-for="page in pageList" v-bind:key="page">{{page}}</option>
+          </select>
+        </div>
+  </div>
 </template>
 
 <script>
@@ -60,6 +68,7 @@ export default {
       customers: [],
       currentPage: 1,
       pageSize: 10,
+      pageList: [],
       ascSort: true,
       sortArrow: "&#9652;" // up arrow - ascending sort
     }
@@ -75,6 +84,24 @@ export default {
     }
   },
   methods: {
+    fetchData: function() {
+      window.axios.get(baseUrl)
+      .then(response => {
+        this.customers = response.data;
+        // Initialize sort to lastName ascending
+        this.sortArrow = "&#9652;"; // up arrow
+        this.customers.sort(this.compareLastNamesAsc);
+        this.initPageList();
+      })
+      //.then(response => {this.customers = response.data; console.log(this.customers)})
+      .catch(error => console.log(error))
+    },
+    initPageList: function() {
+      for(let i = 0; i < this.pageCount; i++) {
+        this.pageList.push(i + 1);
+      }
+      console.log(this.pageList);
+    },
     incrementPage: function() {
       if (this.currentPage < this.pageCount) {
         this.currentPage++;
@@ -95,38 +122,46 @@ export default {
       this.ascSort = !this.ascSort;
       if (this.ascSort) {
         this.sortArrow = "&#9652;"; // up arrow
-        this.customers.sort(this.compareCustomerNamesAsc);
+        this.customers.sort(this.compareLastNamesAsc);
       }
       else {
         this.sortArrow = "&#9662;"; // down arrow
-        this.customers.sort(this.compareCustomerNamesDesc);
+        this.customers.sort(this.compareLastNamesDesc);
       }
     },
-    compareCustomerNamesAsc: function(a, b) {
-      if ( a.name < b.name ){
+    compareLastNamesAsc: function(a, b) {
+      if ( a.lastName < b.lastName ){
         return -1;
       }
-      if ( a.name > b.name ){
+      if ( a.lastName > b.lastName ){
         return 1;
       }
       return 0;
     },
-    compareCustomerNamesDesc: function(a, b) {
-      if ( a.name > b.name ){
+    compareLastNamesDesc: function(a, b) {
+      if ( a.lastName > b.lastName ){
         return -1;
       }
-      if ( a.name < b.name ){
+      if ( a.lastName < b.lastName ){
         return 1;
       }
       return 0;
     }
   },
   created() {
-    // Fetch the data
-    window.axios.get(baseUrl)
-    .then(response => this.customers = response.data)
-    //.then(response => {this.customers = response.data; console.log(this.customers)})
-    .catch(error => console.log(error))
+    this.fetchData();
   }
 }
 </script>
+
+<style scoped>
+  nav {
+    display:inline-block;
+  }
+
+  #current-page {
+    display: inline-block;
+    margin: 25px 0 15px 10px;
+    vertical-align: top;
+  }
+</style>
