@@ -4,6 +4,10 @@
       <span class="component-heading">Customer List</span>
       <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>
       <button type="button" class="btn btn-default" style="margin-left: 1em;" v-on:click="fetchData()">Refresh List</button>
+      <div style="float: right;">
+        <span>Search by last name: </span><input type="text" v-model="searchTerm" v-on:keyup="searchLastName()">
+        <button type="button" class="btn btn-default btn-sm" style="margin-left: 1em;" v-on:click="clearSearch()">Clear</button>
+      </div>
     </div>
     <table id="customer-table" class="table table-striped table-bordered">
       <thead>
@@ -37,11 +41,6 @@
         </li>
         <li><a href="#" aria-label="Previous" v-on:click="decrementPage()">prev</a></li>
         <li><a href="#" aria-label="Next" v-on:click="incrementPage()">next</a></li>
-        <!--
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            -->
         <li>
           <a href="#" v-on:click="lastPage()">
             <span aria-hidden="true">&raquo;</span>
@@ -66,12 +65,13 @@
     data() {
       return {
         customers: [],
+        unfilteredCustomers: [],
         currentPage: 1,
         pageSize: 10,
-        pageList: [],
         ascSort: true,
         // up arrow - ascending sort
-        sortArrow: "&#9652;"
+        sortArrow: "&#9652;",
+        searchTerm: ""
       }
     },
     computed: {
@@ -82,7 +82,14 @@
         let startIndex = (this.currentPage - 1) * this.pageSize;
         let endIndex = this.currentPage * this.pageSize;
         return this.customers.slice(startIndex, endIndex);
-      }
+      },
+      pageList() {
+        let tempAry = [];
+        for (let i = 0; i < this.pageCount; i++) {
+          tempAry.push(i + 1);
+        }
+        return tempAry;
+      },
     },
     methods: {
       fetchData() {
@@ -92,16 +99,9 @@
             // Initialize sort to lastName ascending
             this.sortArrow = "&#9652;"; // up arrow
             this.customers.sort(this.compareLastNamesAsc);
-            this.initPageList();
+            this.unfilteredCustomers = this.customers.slice();
           })
-          //.then(response => {this.customers = response.data; console.log(this.customers)})
           .catch(error => console.log(error))
-      },
-      initPageList() {
-        for (let i = 0; i < this.pageCount; i++) {
-          this.pageList.push(i + 1);
-        }
-        //console.log(this.pageList);
       },
       incrementPage() {
         if (this.currentPage < this.pageCount) {
@@ -124,10 +124,12 @@
         if (this.ascSort) {
           this.sortArrow = "&#9652;"; // up arrow
           this.customers.sort(this.compareLastNamesAsc);
+          this.unfilteredCustomers = this.customers.slice();
         }
         else {
           this.sortArrow = "&#9662;"; // down arrow
           this.customers.sort(this.compareLastNamesDesc);
+          this.unfilteredCustomers = this.customers.slice();
         }
       },
       compareLastNamesAsc(a, b) {
@@ -147,6 +149,25 @@
           return 1;
         }
         return 0;
+      },
+      searchLastName() {
+        if (this.searchTerm.length < 1) {
+          // Reset in case hitting backspace
+          this.customers = this.unfilteredCustomers.slice();
+          return;
+        }
+
+        // Filter customers by last name
+        this.customers = this.unfilteredCustomers.filter(customer => {
+          return customer.lastName.toLowerCase().substring(0, this.searchTerm.length) === this.searchTerm.toLowerCase();
+        });
+        // this.customers = this.customers.filter(customer => {
+        //   return customer.lastName.toLowerCase().substring(0, this.searchTerm.length) === this.searchTerm.toLowerCase();
+        // });
+      },
+      clearSearch() {
+        this.searchTerm = '';
+        this.fetchData();
       }
     },
     created() {
