@@ -3,7 +3,7 @@
     <div id="table-title">
       <span class="component-heading">Customer List</span>
       <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>
-      <button type="button" class="btn btn-default" style="margin-left: 1em;" v-on:click="fetchData()">Refresh List</button>
+      <button type="button" class="btn btn-default" style="margin-left: 1em;" v-on:click="getCustomers()">Refresh List</button>
       <div style="float: right;">
         <span>Search by last name: </span><input type="text" v-model="searchTerm" v-on:keyup="searchLastName()">
         <button type="button" class="btn btn-default btn-sm" style="margin-left: 1em;" v-on:click="clearSearch()">Clear</button>
@@ -77,8 +77,6 @@
         currentPage: 1,
         pageSize: 10,
         ascSort: true,
-        // up arrow - ascending sort
-        sortArrow: "&#9652;",
         searchTerm: ""
       }
     },
@@ -98,15 +96,22 @@
         }
         return tempAry;
       },
+      sortArrow() {
+        if (this.ascSort) {
+          return "&#9652;"; // up arrow
+        }
+        else {
+          return "&#9662;"; // down arrow
+        }
+      }
     },
     methods: {
-      fetchData() {
+      getCustomers() {
         this.searchTerm = '';
         window.axios.get(baseUrl)
           .then(response => {
             this.customers = response.data;
             // Initialize sort to lastName ascending
-            this.sortArrow = "&#9652;"; // up arrow
             this.customers.sort(this.compareLastNamesAsc);
             this.unfilteredCustomers = this.customers.slice();
           })
@@ -131,11 +136,9 @@
       toggleSort() {
         this.ascSort = !this.ascSort;
         if (this.ascSort) {
-          this.sortArrow = "&#9652;"; // up arrow
           this.customers.sort(this.compareLastNamesAsc);
         }
         else {
-          this.sortArrow = "&#9662;"; // down arrow
           this.customers.sort(this.compareLastNamesDesc);
         }
       },
@@ -173,7 +176,7 @@
       },
       clearSearch() {
         this.searchTerm = '';
-        this.fetchData();
+        this.getCustomers();
       },
       deleteCustomer(id, customerName) {
         if (!confirm("Delete customer " + customerName + "?"))
@@ -193,7 +196,7 @@
       }
     },
     created() {
-      this.fetchData();
+      this.getCustomers();
     }
   }
 </script>
