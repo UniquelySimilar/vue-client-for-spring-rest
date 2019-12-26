@@ -19,6 +19,7 @@
           <th>State</th>
           <th>Zipcode</th>
           <th>Email</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +30,9 @@
           <td>{{customer.state}}</td>
           <td>{{customer.zipcode}}</td>
           <td>{{customer.email}}</td>
+          <td>
+            <router-link :to="{ name: 'customerEdit', params: {id: customer.id} }">Edit</router-link>
+          </td>
         </tr>
       </tbody>
     </table>

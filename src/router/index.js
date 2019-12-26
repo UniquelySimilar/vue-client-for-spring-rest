@@ -6,15 +6,22 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/customers',
     name: 'customerIndex',
     component: CustomerIndex
   },
   {
-    path: '/create',
+    path: '/customers/create',
     name: 'customerCreate',
     // route level code-splitting (see documentation)
     component: () => import('../views/customer/CustomerCreateOrEdit.vue')
+  },
+  {
+    path: '/customers/:id/edit',
+    name: 'customerEdit',
+    // route level code-splitting (see documentation)
+    component: () => import('../views/customer/CustomerCreateOrEdit.vue'),
+    props: true
   }
 ]
 
