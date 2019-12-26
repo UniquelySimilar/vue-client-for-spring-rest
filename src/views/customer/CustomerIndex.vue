@@ -20,6 +20,7 @@
           <th>Zipcode</th>
           <th>Email</th>
           <th>&nbsp;</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,9 @@
           <td>{{customer.email}}</td>
           <td>
             <router-link :to="{ name: 'customerEdit', params: {id: customer.id} }">Edit</router-link>
+          </td>
+          <td>
+            <a href="#" v-on:click="deleteCustomer(customer.id, customer.firstName + ' ' + customer.lastName)">Delete</a>
           </td>
         </tr>
       </tbody>
@@ -170,6 +174,22 @@
       clearSearch() {
         this.searchTerm = '';
         this.fetchData();
+      },
+      deleteCustomer(id, customerName) {
+        if (!confirm("Delete customer " + customerName + "?"))
+          return;
+
+        window.axios.delete(baseUrl + id)
+        .then( () => {
+          // Remove the related customer object from the customers array
+          this.customers = this.unfilteredCustomers.filter(customer => {
+            return customer.id !== id;
+          });
+
+          // Update unfiltered customer array to reflect deletion
+          this.unfilteredCustomers = this.customers.slice();
+        })
+        .catch(error => console.log(error))
       }
     },
     created() {
