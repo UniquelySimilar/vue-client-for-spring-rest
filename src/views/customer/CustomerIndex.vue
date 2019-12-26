@@ -93,6 +93,7 @@
     },
     methods: {
       fetchData() {
+        this.searchTerm = '';
         window.axios.get(baseUrl)
           .then(response => {
             this.customers = response.data;
@@ -124,12 +125,10 @@
         if (this.ascSort) {
           this.sortArrow = "&#9652;"; // up arrow
           this.customers.sort(this.compareLastNamesAsc);
-          this.unfilteredCustomers = this.customers.slice();
         }
         else {
           this.sortArrow = "&#9662;"; // down arrow
           this.customers.sort(this.compareLastNamesDesc);
-          this.unfilteredCustomers = this.customers.slice();
         }
       },
       compareLastNamesAsc(a, b) {
@@ -154,6 +153,7 @@
         if (this.searchTerm.length < 1) {
           // Reset in case hitting backspace
           this.customers = this.unfilteredCustomers.slice();
+          this.currentPage = 1;
           return;
         }
 
@@ -161,9 +161,7 @@
         this.customers = this.unfilteredCustomers.filter(customer => {
           return customer.lastName.toLowerCase().substring(0, this.searchTerm.length) === this.searchTerm.toLowerCase();
         });
-        // this.customers = this.customers.filter(customer => {
-        //   return customer.lastName.toLowerCase().substring(0, this.searchTerm.length) === this.searchTerm.toLowerCase();
-        // });
+        this.currentPage = 1;
       },
       clearSearch() {
         this.searchTerm = '';
