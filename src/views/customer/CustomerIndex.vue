@@ -57,10 +57,11 @@
       </ul>
     </nav>
     <div id="current-page">
-      <label>Current page:</label>
+      <label style="margin: 0 0.4em; font-weight: normal;">Page</label>
       <select v-model="currentPage">
         <option v-for="page in pageList" v-bind:key="page">{{page}}</option>
       </select>
+      <span> of {{pageCount}}</span>
     </div>
   </div>
 </template>
@@ -114,6 +115,8 @@
             // Initialize sort to lastName ascending
             this.customers.sort(this.compareLastNamesAsc);
             this.unfilteredCustomers = this.customers.slice();
+            this.currentPage = 1;
+            this.ascSort = true;
           })
           .catch(error => console.log(error))
       },
