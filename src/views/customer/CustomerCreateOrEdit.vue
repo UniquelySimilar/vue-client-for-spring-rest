@@ -1,7 +1,7 @@
 <template>
     <div id="customer-create-edit">
         <div>
-            <span class="component-heading">{{ getPageHeading }}</span>
+            <span class="component-heading">{{ pageHeading }}</span>
         </div>
         <hr>
         <form class="form-horizontal">
@@ -99,7 +99,7 @@
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-2">
                     <button type="button" class="btn btn-default"
-                        v-on:click="submitForm">{{ getSubmitBtnLabel }}</button>
+                        v-on:click="submitForm">{{ submitBtnLabel }}</button>
                     <router-link class="btn btn-default" :to="{ name: 'customerIndex' }">Cancel</router-link>
                 </div>
             </div>
@@ -142,19 +142,19 @@
             }
         },
         computed: {
-            getPageHeading() {
-                var pageHeading = "New Customer"
+            pageHeading() {
+                let heading = "New Customer"
                 if (this.id) {
-                    pageHeading = "Edit Customer"
+                    heading = "Edit Customer"
                 }
-                return pageHeading;
+                return heading;
             },
-            getSubmitBtnLabel() {
-                var submitBtnLabel = "Save"
+            submitBtnLabel() {
+                let btnLabel = "Save"
                 if (this.id) {
-                    submitBtnLabel = "Update"
+                    btnLabel = "Update"
                 }
-                return submitBtnLabel;
+                return btnLabel;
             },
         },
         methods: {
@@ -203,6 +203,7 @@
                     });
             }
         },
+        // Lifecycle hooks
         created() {
             if (this.id) {
                 window.axios.get(baseUrl + this.id)

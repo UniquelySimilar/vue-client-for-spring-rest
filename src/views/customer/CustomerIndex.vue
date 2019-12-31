@@ -43,14 +43,14 @@
     <nav aria-label="Page navigation">
       <ul class="pagination">
         <li>
-          <a href="#" v-on:click="firstPage()">
+          <a href="#" v-on:click="goToFirstPage()">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
         <li><a href="#" aria-label="Previous" v-on:click="decrementPage()">prev</a></li>
         <li><a href="#" aria-label="Next" v-on:click="incrementPage()">next</a></li>
         <li>
-          <a href="#" v-on:click="lastPage()">
+          <a href="#" v-on:click="goToLastPage()">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -130,10 +130,10 @@
           this.currentPage--;
         }
       },
-      firstPage() {
+      goToFirstPage() {
         this.currentPage = 1;
       },
-      lastPage() {
+      goToLastPage() {
         this.currentPage = this.pageCount;
       },
       toggleSort() {
@@ -198,6 +198,7 @@
         .catch(error => console.log(error))
       }
     },
+    // Lifecycle hooks
     created() {
       this.getCustomers();
     }
