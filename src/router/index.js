@@ -5,6 +5,7 @@ import CustomerIndex from '../views/customer/CustomerIndex.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  // Customers
   {
     path: '/customers',
     name: 'customerIndex',
@@ -27,7 +28,13 @@ const routes = [
     name: 'customerEdit',
     component: () => import('../views/customer/CustomerCreateOrEdit.vue'),
     props: true
-  }
+  },
+  // Orders
+  {
+    path: '/orders/create',
+    name: 'orderCreate',
+    component: () => import('../views/order/OrderCreateOrEdit.vue')
+  },
 ]
 
 const router = new VueRouter({

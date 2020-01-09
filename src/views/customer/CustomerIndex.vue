@@ -1,6 +1,6 @@
 <template>
   <div id="customer-index">
-    <div id="table-title">
+    <div class="table-title">
       <span class="component-heading">Customer List</span>
       <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>
       <button type="button" class="btn btn-default" style="margin-left: 1em;" v-on:click="getCustomers()">Refresh List</button>
@@ -210,10 +210,6 @@
 <style scoped>
   nav {
     display: inline-block;
-  }
-
-  #table-title {
-    margin-bottom: 1em;
   }
 
   #current-page {

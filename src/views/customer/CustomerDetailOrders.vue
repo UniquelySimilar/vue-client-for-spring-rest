@@ -59,8 +59,9 @@
             </div>
         </div>
         <hr>
-        <div>
+        <div class="table-title">
             <span class="component-heading">Orders</span>
+            <router-link class="btn btn-default" :to="{ name: 'orderCreate' }">Create Order</router-link>
         </div>
         <div class="row">
             <div class="col-md-8">

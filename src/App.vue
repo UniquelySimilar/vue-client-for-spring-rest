@@ -31,4 +31,8 @@
     margin-right: 2em;
   }
 
+  .table-title {
+    margin-bottom: 1em;
+  }
+
 </style>
