@@ -11,15 +11,20 @@ const routes = [
     component: CustomerIndex
   },
   {
+    path: '/customers/:id',
+    name: 'customerDetailOrders',
+    // route level code-splitting (see documentation)
+    component: () => import('../views/customer/CustomerDetailOrders.vue'),
+    props: true
+  },
+  {
     path: '/customers/create',
     name: 'customerCreate',
-    // route level code-splitting (see documentation)
     component: () => import('../views/customer/CustomerCreateOrEdit.vue')
   },
   {
     path: '/customers/:id/edit',
     name: 'customerEdit',
-    // route level code-splitting (see documentation)
     component: () => import('../views/customer/CustomerCreateOrEdit.vue'),
     props: true
   }

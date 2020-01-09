@@ -25,7 +25,9 @@
       </thead>
       <tbody>
         <tr v-for="customer in currentPageCustomers" v-bind:key="customer.id">
-          <td>{{customer.lastName}}</td>
+          <td>
+            <router-link :to="{ name: 'customerDetailOrders', params: {id: customer.id} }">{{customer.lastName}}</router-link>
+          </td>
           <td>{{customer.firstName}}</td>
           <td>{{customer.city}}</td>
           <td>{{customer.state}}</td>

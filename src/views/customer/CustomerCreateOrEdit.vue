@@ -122,7 +122,8 @@
             return {
                 customer: {
                     id: undefined,
-                    name: '',
+                    firstName: '',
+                    lastName: '',
                     street: '',
                     city: '',
                     state: 'Colorado',
