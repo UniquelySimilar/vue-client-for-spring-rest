@@ -14,7 +14,8 @@
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
                 <div class="col-md-4">
-                    <datepicker dateFormat="m/d/yy" v-bind:initialDate="order.orderDate" v-on:update-date="updateDate" v-once></datepicker>
+                    <datepicker id="orderDate" dateFormat="m/d/yy" :dateType="1" :initialDate="order.orderDate"
+                     v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -24,7 +25,8 @@
             <div class="form-group">
                 <label for="requiredDate" class="col-md-offset-2 col-md-2">Required Date</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="requiredDate" v-model="order.requiredDate">
+                    <datepicker id="requiredDate" dateFormat="m/d/yy" :dateType="2" :initialDate="order.requiredDate"
+                     v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -61,8 +63,8 @@
                     id: undefined,
                     orderStatus: 1,
                     orderDate: new Date(),
-                    requiredDate: '',
-                    shippedDate: ''
+                    requiredDate: null,
+                    shippedDate: null
                 },
                 orderStatus: '1',
                 orderStatusList: [
@@ -105,12 +107,13 @@
                 return returnValue;
             },
             updateDate(payload) {
-                console.log("Called updateOrderDate");
+                console.log("Called updateDate");
                 // TODO: Formatting?
-                // TODO: Add date type to payload
-                console.log("Update date type: " + payload.dateType);
-                this.order.orderDate = payload.dateValue;
-                console.log("Update date value: " + this.order.orderDate);
+                // TODO: Process dateType form payload
+                console.log("Update date type: " + payload.dtType);
+                console.log("Update date value: " + payload.dtValue);
+                //this.order.orderDate = payload.dtValue;
+                //console.log("New customer orderDate: " + this.order.orderDate);
             },
             submitForm() {
                 alert("Form submit placeholder");

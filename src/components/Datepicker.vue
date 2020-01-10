@@ -10,16 +10,23 @@
     require('jquery-ui/themes/base/theme.css');
 
     export default {
-        props: ['dateFormat', 'initialDate'],
+        props: {
+            dateFormat: String,
+            // dateType: 1 = orderDate, 2 = requiredDate, 3 = shippedDate
+            dateType: Number,
+            initialDate: Date
+        },
         mounted: function() {
             var self = this;
             $(this.$el).datepicker({
                 dateFormat: this.dateFormat,
                 onSelect: function(dateText) {
-                    self.$emit('update-date', { dateValue: dateText, dateType: "1" });
+                    var type = self.dateType;
+                    self.$emit('update-date', { dtValue: dateText, dtType: type });
                 }
             })
             .datepicker("setDate", this.initialDate);
+            $(this.$el).attr('readonly', true);
         },
         beforeDestroy: function() {
             $(this.$el).datepicker('hide').datepicker('destroy');
