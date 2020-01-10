@@ -14,7 +14,10 @@
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
                 <div class="col-md-4">
+                    <!--
                     <input type="input" class="form-control" id="orderDate" v-model="order.orderDate">
+                    -->
+                    <datepicker></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -43,7 +46,12 @@
 </template>
 
 <script>
+    import Datepicker from '../../components/Datepicker.vue'
+
     export default {
+        components: {
+            'datepicker': Datepicker
+        },
         props: {
             id: {
                 type: Number,
