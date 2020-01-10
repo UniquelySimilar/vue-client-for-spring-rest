@@ -14,10 +14,7 @@
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
                 <div class="col-md-4">
-                    <!--
-                    <input type="input" class="form-control" id="orderDate" v-model="order.orderDate">
-                    -->
-                    <datepicker></datepicker>
+                    <datepicker dateFormat="m/d/yy" v-bind:initialDate="order.orderDate" v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -63,7 +60,7 @@
                 order: {
                     id: undefined,
                     orderStatus: 1,
-                    orderDate: '',
+                    orderDate: new Date(),
                     requiredDate: '',
                     shippedDate: ''
                 },
@@ -106,6 +103,14 @@
                 }
 
                 return returnValue;
+            },
+            updateDate(payload) {
+                console.log("Called updateOrderDate");
+                // TODO: Formatting?
+                // TODO: Add date type to payload
+                console.log("Update date type: " + payload.dateType);
+                this.order.orderDate = payload.dateValue;
+                console.log("Update date value: " + this.order.orderDate);
             },
             submitForm() {
                 alert("Form submit placeholder");

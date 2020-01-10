@@ -224,8 +224,4 @@
     label {
         text-align: right;
     }
-
-    .error-msg {
-        color: red;
-    }
 </style>

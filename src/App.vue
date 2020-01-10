@@ -35,4 +35,8 @@
     margin-bottom: 1em;
   }
 
+  .error-msg {
+    color: red;
+  }
+
 </style>
