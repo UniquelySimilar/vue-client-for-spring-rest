@@ -48,6 +48,7 @@
     import Datepicker from '../../components/Datepicker.vue'
 
     export default {
+        name: "OrderCreateOrEdit",
         components: {
             'datepicker': Datepicker
         },
@@ -55,12 +56,17 @@
             id: {
                 type: Number,
                 required: false
+            },
+            customerId: {
+                type: Number,
+                required: true
             }
         },
         data() {
             return {
                 order: {
                     id: undefined,
+                    customerId: this.customerId,
                     orderStatus: 1,
                     orderDate: new Date(),
                     requiredDate: null,
@@ -107,17 +113,30 @@
                 return returnValue;
             },
             updateDate(payload) {
-                console.log("Called updateDate");
-                // TODO: Formatting?
-                // TODO: Process dateType form payload
-                console.log("Update date type: " + payload.dtType);
-                console.log("Update date value: " + payload.dtValue);
-                //this.order.orderDate = payload.dtValue;
-                //console.log("New customer orderDate: " + this.order.orderDate);
+                switch(payload.dtType) {
+                    case 1:
+                        this.order.orderDate = payload.dtValue;
+                        //console.log("New orderDate: " + this.order.orderDate);
+                        break;
+                    case 2:
+                        this.order.requiredDate = payload.dtValue;
+                        //console.log("New requiredDate: " + this.order.requiredDate);
+                        break;
+                    case 3:
+                        this.order.shippedDate = payload.dtValue;
+                        //console.log("New shippedDate: " + this.order.shippedDate);
+                        break;
+                    default:
+                        console.log("ERROR: Unrecognized date type: " + payload.dtType);
+                }
             },
             submitForm() {
                 alert("Form submit placeholder");
             }
+        },
+        // Lifecycle hooks
+        created() {
+            console.log(this.order);
         }
     }
 </script>

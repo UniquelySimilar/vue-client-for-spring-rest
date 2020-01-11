@@ -1,1 +1,1 @@
-export default "http://localhost:8080/springrestservice/api/customer/";
+export default "http://localhost:8080/springrestservice/api/customers/";

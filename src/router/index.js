@@ -31,9 +31,10 @@ const routes = [
   },
   // Orders
   {
-    path: '/orders/create',
+    path: '/customers/:customerId/orders/create',
     name: 'orderCreate',
-    component: () => import('../views/order/OrderCreateOrEdit.vue')
+    component: () => import('../views/order/OrderCreateOrEdit.vue'),
+    props: true
   },
 ]
 

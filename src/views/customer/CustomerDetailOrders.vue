@@ -61,7 +61,7 @@
         <hr>
         <div class="table-title">
             <span class="component-heading">Orders</span>
-            <router-link class="btn btn-default" :to="{ name: 'orderCreate' }">Create Order</router-link>
+            <router-link class="btn btn-default" v-if="customer.id" :to="{ name: 'orderCreate', params: { customerId: customer.id } }">Create Order</router-link>
         </div>
         <div class="row">
             <div class="col-md-8">
@@ -143,11 +143,11 @@
             window.axios.get(baseUrl + this.id)
                 .then(response => {
                     this.customer = response.data;
-                    //console.log(this.customer);
+                    this.customer.id = parseInt(this.customer.id);
                     this.orders = this.customer.orders;
-                    this.orders.forEach(order => {
-                        console.log(order);
-                    });
+                    // this.orders.forEach(order => {
+                    //     console.log(order);
+                    // });
                 })
                 .catch(error => {
                     console.log(error);
