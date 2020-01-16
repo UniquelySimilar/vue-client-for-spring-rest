@@ -10,6 +10,7 @@
     require('jquery-ui/themes/base/theme.css');
 
     export default {
+        name: "Datepicker",
         props: {
             dateFormat: String,
             // dateType: 1 = orderDate, 2 = requiredDate, 3 = shippedDate

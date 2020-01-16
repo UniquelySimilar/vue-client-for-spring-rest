@@ -14,7 +14,7 @@
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
                 <div class="col-md-4">
-                    <datepicker id="orderDate" dateFormat="m/d/yy" :dateType="1" :initialDate="order.orderDate"
+                    <datepicker id="orderDate" :dateFormat="dateFormat" :dateType="1" :initialDate="order.orderDate"
                      v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="requiredDate" class="col-md-offset-2 col-md-2">Required Date</label>
                 <div class="col-md-4">
-                    <datepicker id="requiredDate" dateFormat="m/d/yy" :dateType="2" :initialDate="order.requiredDate"
+                    <datepicker id="requiredDate" :dateFormat="dateFormat" :dateType="2" :initialDate="order.requiredDate"
                      v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+    import springRestServiceUrl from '../../globalvars.js'
     import Datepicker from '../../components/Datepicker.vue'
 
     export default {
@@ -65,8 +66,7 @@
         data() {
             return {
                 order: {
-                    id: undefined,
-                    customerId: this.customerId,
+                    id: this.id,
                     orderStatus: 1,
                     orderDate: new Date(),
                     requiredDate: null,
@@ -79,7 +79,10 @@
                     { text: "Rejected", value: "3" },
                     { text: "Completed", value: "4" },
                 ],
-                validationErrors: []
+                validationErrors: [],
+                dateFormat: "yy-mm-dd",
+                // Hard code to noon Mountain Time for testing
+                timeZoneSuffix: "T12:00:00-06:00"
             }
         },
         computed: {
@@ -115,15 +118,15 @@
             updateDate(payload) {
                 switch(payload.dtType) {
                     case 1:
-                        this.order.orderDate = payload.dtValue;
+                        this.order.orderDate = payload.dtValue + this.timeZoneSuffix;
                         //console.log("New orderDate: " + this.order.orderDate);
                         break;
                     case 2:
-                        this.order.requiredDate = payload.dtValue;
+                        this.order.requiredDate = payload.dtValue + this.timeZoneSuffix;
                         //console.log("New requiredDate: " + this.order.requiredDate);
                         break;
                     case 3:
-                        this.order.shippedDate = payload.dtValue;
+                        this.order.shippedDate = payload.dtValue + this.timeZoneSuffix;
                         //console.log("New shippedDate: " + this.order.shippedDate);
                         break;
                     default:
@@ -131,12 +134,42 @@
                 }
             },
             submitForm() {
-                alert("Form submit placeholder");
+                window.axios({
+                    method: this.id ? 'put' : 'post',
+                    url: springRestServiceUrl + this.customerId + "/orders",
+                    data: JSON.stringify(this.order)
+                })
+                .then(() => {
+                    // Redirect back to CustomerDetailOrders view
+                    this.$router.push({ name: 'customerDetailOrders', params: { id: this.customerId} });
+                })
+                .catch(error => {
+                    if (error.response) {
+                        // The request was made and the server responded with a status code that falls out of the range of 2xx
+                        if (error.response.status == 400) {
+                            // Validation error
+                            // TODO: Implement validation in web service
+                            console.log("HTTP status code 400");
+                            //this.validationErrors = error.response.data;
+                        }
+                        else {
+                            console.log(error.response.status);
+                            //console.log(error.response);
+                        }
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser
+                        console.error(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.error('Error', error.message);
+                    }
+                });
             }
         },
         // Lifecycle hooks
         created() {
-            console.log(this.order);
+            //console.log(this.order);
         }
     }
 </script>

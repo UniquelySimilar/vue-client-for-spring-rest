@@ -108,7 +108,7 @@
 </template>
 
 <script>
-    import baseUrl from '../../globalvars.js'
+    import springRestServiceUrl from '../../globalvars.js'
 
     export default {
         name: "CustomerCreateOrEdit",
@@ -175,7 +175,7 @@
             submitForm() {
                 window.axios({
                     method: this.id ? 'put' : 'post',
-                    url: baseUrl,
+                    url: springRestServiceUrl,
                     data: JSON.stringify(this.customer)
                 })
                     .then(() => {
@@ -207,7 +207,7 @@
         // Lifecycle hooks
         created() {
             if (this.id) {
-                window.axios.get(baseUrl + this.id)
+                window.axios.get(springRestServiceUrl + this.id)
                     .then(response => {
                         this.customer = response.data;
                         //console.log(this.customer);
