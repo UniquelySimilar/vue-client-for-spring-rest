@@ -12,7 +12,7 @@ const routes = [
     component: CustomerIndex
   },
   {
-    path: '/customers/:id',
+    path: '/customers/:customerId',
     name: 'customerDetailOrders',
     // route level code-splitting (see documentation)
     component: () => import('../views/customer/CustomerDetailOrders.vue'),
@@ -24,7 +24,7 @@ const routes = [
     component: () => import('../views/customer/CustomerCreateOrEdit.vue')
   },
   {
-    path: '/customers/:id/edit',
+    path: '/customers/:customerId/edit',
     name: 'customerEdit',
     component: () => import('../views/customer/CustomerCreateOrEdit.vue'),
     props: true
@@ -36,6 +36,12 @@ const routes = [
     component: () => import('../views/order/OrderCreateOrEdit.vue'),
     props: true
   },
+  {
+    path: '/customers/:customerId/orders/:orderId/edit',
+    name: 'orderEdit',
+    component: () => import('../views/order/OrderCreateOrEdit.vue'),
+    props: true
+  }
 ]
 
 const router = new VueRouter({

@@ -113,7 +113,7 @@
     export default {
         name: "CustomerCreateOrEdit",
         props: {
-            id: {
+            customerId: {
                 type: Number,
                 required: false
             }
@@ -145,14 +145,14 @@
         computed: {
             pageHeading() {
                 let heading = "New Customer"
-                if (this.id) {
+                if (this.customerId) {
                     heading = "Edit Customer"
                 }
                 return heading;
             },
             submitBtnLabel() {
                 let btnLabel = "Save"
-                if (this.id) {
+                if (this.customerId) {
                     btnLabel = "Update"
                 }
                 return btnLabel;
@@ -174,7 +174,7 @@
             },
             submitForm() {
                 window.axios({
-                    method: this.id ? 'put' : 'post',
+                    method: this.customerId ? 'put' : 'post',
                     url: springRestServiceUrl,
                     data: JSON.stringify(this.customer)
                 })
@@ -206,11 +206,14 @@
         },
         // Lifecycle hooks
         created() {
-            if (this.id) {
-                window.axios.get(springRestServiceUrl + this.id)
+            if (this.customerId) {
+                window.axios.get(springRestServiceUrl + this.customerId)
                     .then(response => {
                         this.customer = response.data;
-                        //console.log(this.customer);
+                        console.log(JSON.stringify(this.customer));
+                        // Delete unneeded 'orders' array property that causes error in update
+                        delete this.customer.orders;
+                        console.log(JSON.stringify(this.customer));
                     })
                     .catch(error => {
                         console.log(error);

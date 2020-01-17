@@ -1,14 +1,15 @@
 <template>
   <div id="customer-index">
-    <div class="table-title">
+    <div>
       <span class="component-heading">Customer List</span>
       <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>
-      <button type="button" class="btn btn-default" style="margin-left: 1em;" v-on:click="getCustomers()">Refresh List</button>
+      <button type="button" class="btn btn-default btn-margin-left" v-on:click="getCustomers()">Refresh</button>
       <div style="float: right;">
         <span>Search by last name: </span><input type="text" v-model="searchTerm" v-on:keyup="searchLastName()">
         <button type="button" class="btn btn-default btn-sm" style="margin-left: 1em;" v-on:click="clearSearch()">Clear</button>
       </div>
     </div>
+    <span class="table-subtitle">Click a last name to manage Orders</span>
     <table id="customer-table" class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -26,7 +27,7 @@
       <tbody>
         <tr v-for="customer in currentPageCustomers" v-bind:key="customer.id">
           <td>
-            <router-link :to="{ name: 'customerDetailOrders', params: {id: customer.id} }">{{customer.lastName}}</router-link>
+            <router-link :to="{ name: 'customerDetailOrders', params: {customerId: customer.id} }">{{customer.lastName}}</router-link>
           </td>
           <td>{{customer.firstName}}</td>
           <td>{{customer.city}}</td>
@@ -34,7 +35,7 @@
           <td>{{customer.zipcode}}</td>
           <td>{{customer.email}}</td>
           <td>
-            <router-link :to="{ name: 'customerEdit', params: {id: customer.id} }">Edit</router-link>
+            <router-link :to="{ name: 'customerEdit', params: {customerId: customer.id} }">Edit</router-link>
           </td>
           <td>
             <a href="#" v-on:click="deleteCustomer(customer.id, customer.firstName + ' ' + customer.lastName)">Delete</a>

@@ -62,7 +62,12 @@
         <div class="table-title">
             <span class="component-heading">Orders</span>
             <router-link class="btn btn-default" v-if="customer.id" :to="{ name: 'orderCreate', params: { customerId: customer.id } }">Create Order</router-link>
+            <router-link class="btn btn-default btn-margin-left" :to="{ name: 'customerIndex' }">Back</router-link>
         </div>
+        <!--
+            TODO: Add edit, delete, and filter by status
+        <span class="table-subtitle">Click a status to manage Line Items</span>
+        -->
         <div class="row">
             <div class="col-md-8">
                 <table id="order-table" class="table table-striped table-bordered">
@@ -72,6 +77,8 @@
                             <th>Order Date</th>
                             <th>Required Date</th>
                             <th>Shipped Date</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,13 +87,13 @@
                             <td>{{ formatDate(order.orderDate) }}</td>
                             <td>{{ formatDate(order.requiredDate) }}</td>
                             <td>{{ formatDate(order.shippedDate) }}</td>
+                            <td><router-link :to="{ name: 'orderEdit', params: { customerId: customerId, orderId: order.id } }">Edit</router-link></td>
+                            <td><a href="">Delete</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <hr>
-        <router-link class="btn btn-default" :to="{ name: 'customerIndex' }">Cancel</router-link>
     </div>
 </template>
 
@@ -96,7 +103,7 @@
     export default {
         name: "CustomerDetailOrders",
         props: {
-            id: {
+            customerId: {
                 type: Number,
                 required: true
             }
@@ -140,7 +147,7 @@
         },
         // Lifecycle hooks
         created() {
-            window.axios.get(baseUrl + this.id)
+            window.axios.get(baseUrl + this.customerId)
                 .then(response => {
                     this.customer = response.data;
                     this.customer.id = parseInt(this.customer.id);

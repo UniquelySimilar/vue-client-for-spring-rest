@@ -35,6 +35,16 @@
     margin-bottom: 1em;
   }
 
+  .table-subtitle {
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-top: 0.5em;
+  }
+
+  .btn-margin-left {
+    margin-left: 1em;
+  }
+
   .error-msg {
     color: red;
   }

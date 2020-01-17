@@ -37,7 +37,7 @@
                 <div class="col-md-offset-4 col-md-2">
                     <button type="button" class="btn btn-default"
                         v-on:click="submitForm">{{ submitBtnLabel }}</button>
-                    <router-link class="btn btn-default" :to="{ name: 'customerIndex' }">Cancel</router-link>
+                    <router-link class="btn btn-default" :to="{ name: 'customerDetailOrders', params: { id: customerId } }">Cancel</router-link>
                 </div>
             </div>
         </form>
