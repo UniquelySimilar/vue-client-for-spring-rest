@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import baseUrl from '../../globalvars.js'
+    import { customerRestUrl } from '../../globalvars.js'
 
     export default {
         name: "CustomerDetailOrders",
@@ -147,7 +147,7 @@
         },
         // Lifecycle hooks
         created() {
-            window.axios.get(baseUrl + this.customerId + "/orders")
+            window.axios.get(customerRestUrl + this.customerId + "/orders")
                 .then(response => {
                     console.log(response.data);
                     this.customer = response.data.customer;

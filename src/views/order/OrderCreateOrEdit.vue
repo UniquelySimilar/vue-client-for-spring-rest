@@ -45,7 +45,8 @@
 </template>
 
 <script>
-    import springRestServiceUrl from '../../globalvars.js'
+    import { customerRestUrl } from '../../globalvars.js'
+    import { orderRestUrl } from '../../globalvars.js'
     import Datepicker from '../../components/Datepicker.vue'
 
     export default {
@@ -54,7 +55,7 @@
             'datepicker': Datepicker
         },
         props: {
-            id: {
+            orderId: {
                 type: Number,
                 required: false
             },
@@ -136,7 +137,7 @@
             submitForm() {
                 window.axios({
                     method: this.id ? 'put' : 'post',
-                    url: springRestServiceUrl + this.customerId + "/orders",
+                    url: customerRestUrl + this.customerId + "/orders",
                     data: JSON.stringify(this.order)
                 })
                 .then(() => {
@@ -169,6 +170,11 @@
         },
         // Lifecycle hooks
         created() {
+            if (this.id) {
+                window.axios.get(orderRestUrl + this.orderId)
+                .then()
+                .catch( error => console.log(error));
+            }
             //console.log(this.order);
         }
     }

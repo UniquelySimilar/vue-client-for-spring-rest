@@ -108,7 +108,7 @@
 </template>
 
 <script>
-    import springRestServiceUrl from '../../globalvars.js'
+    import { customerRestUrl } from '../../globalvars.js'
 
     export default {
         name: "CustomerCreateOrEdit",
@@ -175,7 +175,7 @@
             submitForm() {
                 window.axios({
                     method: this.customerId ? 'put' : 'post',
-                    url: springRestServiceUrl,
+                    url: customerRestUrl,
                     data: JSON.stringify(this.customer)
                 })
                     .then(() => {
@@ -207,13 +207,10 @@
         // Lifecycle hooks
         created() {
             if (this.customerId) {
-                window.axios.get(springRestServiceUrl + this.customerId)
+                window.axios.get(customerRestUrl + this.customerId)
                     .then(response => {
                         this.customer = response.data;
-                        console.log(JSON.stringify(this.customer));
-                        // Delete unneeded 'orders' array property that causes error in update
-                        delete this.customer.orders;
-                        console.log(JSON.stringify(this.customer));
+                        //console.log(JSON.stringify(this.customer));
                     })
                     .catch(error => {
                         console.log(error);

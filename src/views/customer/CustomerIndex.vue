@@ -70,7 +70,7 @@
 </template>
 
 <script>
-  import baseUrl from '../../globalvars.js'
+  import { customerRestUrl } from '../../globalvars.js'
 
   export default {
     name: 'CustomerIndex',
@@ -112,7 +112,7 @@
     methods: {
       getCustomers() {
         this.searchTerm = '';
-        window.axios.get(baseUrl)
+        window.axios.get(customerRestUrl)
           .then(response => {
             this.customers = response.data;
             // Initialize sort to lastName ascending
@@ -188,7 +188,7 @@
         if (!confirm("Delete customer " + customerName + "?"))
           return;
 
-        window.axios.delete(baseUrl + id)
+        window.axios.delete(customerRestUrl + id)
         .then( () => {
           // Remove the related customer object from the customers array
           this.customers = this.unfilteredCustomers.filter(customer => {
