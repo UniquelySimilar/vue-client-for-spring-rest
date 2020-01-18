@@ -147,11 +147,12 @@
         },
         // Lifecycle hooks
         created() {
-            window.axios.get(baseUrl + this.customerId)
+            window.axios.get(baseUrl + this.customerId + "/orders")
                 .then(response => {
-                    this.customer = response.data;
+                    console.log(response.data);
+                    this.customer = response.data.customer;
                     this.customer.id = parseInt(this.customer.id);
-                    this.orders = this.customer.orders;
+                    this.orders = response.data.orders;
                     // this.orders.forEach(order => {
                     //     console.log(order);
                     // });
