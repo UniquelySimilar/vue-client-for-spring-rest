@@ -108,7 +108,7 @@
 </template>
 
 <script>
-    import { customerRestUrl } from '../../globalvars.js'
+    import { customerRestUrl, axios } from '../../globalvars.js'
 
     export default {
         name: "CustomerCreateOrEdit",
@@ -173,7 +173,7 @@
                 return returnValue;
             },
             submitForm() {
-                window.axios({
+                axios({
                     method: this.customerId ? 'put' : 'post',
                     url: customerRestUrl,
                     data: JSON.stringify(this.customer)
@@ -207,7 +207,7 @@
         // Lifecycle hooks
         created() {
             if (this.customerId) {
-                window.axios.get(customerRestUrl + this.customerId)
+                axios.get(customerRestUrl + this.customerId)
                     .then(response => {
                         this.customer = response.data;
                         //console.log(JSON.stringify(this.customer));

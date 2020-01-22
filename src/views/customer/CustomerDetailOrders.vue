@@ -87,7 +87,7 @@
                             <td>{{ formatDate(order.orderDate) }}</td>
                             <td>{{ formatDate(order.requiredDate) }}</td>
                             <td>{{ formatDate(order.shippedDate) }}</td>
-                            <td><router-link :to="{ name: 'orderEdit', params: { customerId: customerId, orderId: order.id } }">Edit</router-link></td>
+                            <td><router-link :to="{ name: 'orderEdit', params: { customerId: customer.id, orderId: order.id } }">Edit</router-link></td>
                             <td><a href="">Delete</a></td>
                         </tr>
                     </tbody>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import { customerRestUrl } from '../../globalvars.js'
+    import { customerRestUrl, axios } from '../../globalvars.js'
 
     export default {
         name: "CustomerDetailOrders",
@@ -147,15 +147,16 @@
         },
         // Lifecycle hooks
         created() {
-            window.axios.get(customerRestUrl + this.customerId + "/orders")
+            axios.get(customerRestUrl + this.customerId + "/orders")
                 .then(response => {
-                    console.log(response.data);
+                    //console.log(response.data);
                     this.customer = response.data.customer;
                     this.customer.id = parseInt(this.customer.id);
                     this.orders = response.data.orders;
-                    // this.orders.forEach(order => {
-                    //     console.log(order);
-                    // });
+                    this.orders.forEach(order => {
+                        order.id = parseInt(order.id);
+                        //console.log(order);
+                    });
                 })
                 .catch(error => {
                     console.log(error);
