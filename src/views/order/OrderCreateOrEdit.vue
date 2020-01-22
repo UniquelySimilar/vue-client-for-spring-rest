@@ -14,7 +14,7 @@
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
                 <div class="col-md-4">
-                    <datepicker id="orderDate" :dateFormat="dateFormat" :dateType="1" :initialDate="order.orderDate"
+                    <datepicker id="orderDate" v-if="displayDatepicker" :dateFormat="dateFormat" :dateType="1" :initialDate="order.orderDate"
                      v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label for="requiredDate" class="col-md-offset-2 col-md-2">Required Date</label>
                 <div class="col-md-4">
-                    <datepicker id="requiredDate" :dateFormat="dateFormat" :dateType="2" :initialDate="order.requiredDate"
+                    <datepicker id="requiredDate" v-if="displayDatepicker" :dateFormat="dateFormat" :dateType="2" :initialDate="order.requiredDate"
                      v-on:update-date="updateDate" v-once></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
@@ -83,24 +83,28 @@
                 validationErrors: [],
                 dateFormat: "yy-mm-dd",
                 // Hard code to noon Mountain Time for testing
-                timeZoneSuffix: "T12:00:00-06:00"
+                timeZoneSuffix: "T12:00:00-06:00",
+                getOrderResponseReceived: false
             }
         },
         computed: {
             pageHeading() {
                 let heading = "New Order";
-                if (this.id) {
+                if (this.orderId) {
                     heading = "Edit Order";
                 }
                 return heading;
             },
             submitBtnLabel() {
                 let btnLabel = "Save";
-                if (this.id) {
+                if (this.orderId) {
                     btnLabel = "Update";
                 }
                 return btnLabel;
             },
+            displayDatepicker() {
+                return (!this.orderId || this.getOrderResponseReceived);
+            }
         },
         methods: {
             getValidationError(fieldName) {
@@ -164,24 +168,25 @@
                         console.error('Error', error.message);
                     }
                 });
-            }
+            },
         },
         // Lifecycle hooks
         created() {
             if (this.orderId) {
                 axios.get(orderRestUrl + this.orderId)
                 .then( response => {
-                    console.log("Default date: " + this.order.orderDate);
-                    console.log(response.data);
+                    this.getOrderResponseReceived = true;
+                    //console.log("Default date: " + this.order.orderDate);
+                    //console.log(response.data);
                     this.order = response.data;
-                    console.log("Retrieved order orderDate: " + new Date(this.order.orderDate));
+                    // Change dates from milliseconds to format Datepicker can use
                     this.order.orderDate = new Date(this.order.orderDate);
-                    console.log("Retrieved order requiredDate: " + new Date(this.order.requiredDate));
+                    //console.log("Retrieved order orderDate: " + this.order.orderDate);
                     this.order.requiredDate = new Date(this.order.requiredDate);
+                    //console.log("Retrieved order requiredDate: " + this.order.requiredDate);
                 })
                 .catch( error => console.log(error));
             }
-            //console.log(this.order);
         }
     }
 </script>

@@ -12,10 +12,19 @@
     export default {
         name: "Datepicker",
         props: {
-            dateFormat: String,
+            dateFormat: {
+                type: String,
+                required: true
+            },
             // dateType: 1 = orderDate, 2 = requiredDate, 3 = shippedDate
-            dateType: Number,
-            initialDate: Date
+            dateType: {
+                type: Number,
+                required: true
+            },
+            initialDate: {
+                type: Date,
+                required: false
+            }
         },
         mounted: function() {
             var self = this;
@@ -28,6 +37,7 @@
             })
             .datepicker("setDate", this.initialDate);
             $(this.$el).attr('readonly', true);
+            //console.log("Datepicker initialDate: " + this.initialDate);
         },
         beforeDestroy: function() {
             $(this.$el).datepicker('hide').datepicker('destroy');
