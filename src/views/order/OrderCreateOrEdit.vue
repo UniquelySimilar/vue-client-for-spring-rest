@@ -11,6 +11,7 @@
                     </select>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
                 <div class="col-md-4">
@@ -22,6 +23,7 @@
                     <span>{{ getValidationError('orderDate') }}</span>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="requiredDate" class="col-md-offset-2 col-md-2">Required Date</label>
                 <div class="col-md-4">
@@ -33,6 +35,20 @@
                     <span>{{ getValidationError('requiredDate') }}</span>
                 </div>
             </div>
+
+            <!-- Only display Shipped Date for edit form-->
+            <div class="form-group" v-if="getOrderResponseReceived">
+                <label for="shippedDate" class="col-md-offset-2 col-md-2">Shipped Date</label>
+                <div class="col-md-4">
+                    <datepicker id="shippedDate" v-if="displayDatepicker" :dateFormat="dateFormat" :dateType="3" :initialDate="order.shippedDate"
+                     v-on:update-date="updateDate" v-once></datepicker>
+                </div>
+                <div class="col-md-4 error-msg">
+                    <span>*&nbsp;</span>
+                    <span>{{ getValidationError('shippedDate') }}</span>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-2">
                     <button type="button" class="btn btn-default"
@@ -73,7 +89,6 @@
                     requiredDate: null,
                     shippedDate: null
                 },
-                //orderStatus: '1',
                 orderStatusList: [
                     { text: "Pending", value: "1" },
                     { text: "Processing", value: "2" },
