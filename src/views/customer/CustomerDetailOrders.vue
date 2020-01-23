@@ -88,7 +88,7 @@
                             <td>{{ formatDate(order.requiredDate) }}</td>
                             <td>{{ formatDate(order.shippedDate) }}</td>
                             <td><router-link :to="{ name: 'orderEdit', params: { customerId: customer.id, orderId: order.id } }">Edit</router-link></td>
-                            <td><a href="">Delete</a></td>
+                            <td><a href="#" v-on:click="deleteOrder(order.id)">Delete</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import { customerRestUrl, axios } from '../../globalvars.js'
+    import { customerRestUrl, orderRestUrl, axios } from '../../globalvars.js'
 
     export default {
         name: "CustomerDetailOrders",
@@ -143,6 +143,20 @@
                 }
 
                 return statusStr;
+            },
+            deleteOrder(id) {
+                if (!confirm("Delete order")) {
+                    return;
+                }
+
+                axios.delete(orderRestUrl + id)
+                .then( () => {
+                    // Remove order from orders array
+                    this.orders = this.orders.filter( order => {
+                        return order.id !== id;
+                    });
+                })
+                .catch(error => console.log(error));
             }
         },
         // Lifecycle hooks
