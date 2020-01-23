@@ -6,7 +6,6 @@
 * **Vue Router**
 * **Bootstrap**
 * **Full CRUD functionality for Customer model**
+* **Full CRUD functionality for Order model as child (many-to-one) of Customer model**
 * **My implementation for sorting and searching data in an html table**
 * **My implementation of a custom Datepicker component wrapping a jQuery UI Datepicker widget**
-* **IN PROGRESS**
-    * **Full CRUD functionality for Order model as child of Customer model**
