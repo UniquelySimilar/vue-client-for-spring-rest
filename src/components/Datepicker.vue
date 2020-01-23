@@ -26,6 +26,12 @@
                 required: false
             }
         },
+        watch: {
+            initialDate() {
+                // NOTE: Need watch on this prop since need to explicitly update wrapped jQuery datepicker
+                $(this.$el).datepicker("setDate", this.initialDate);
+            }
+        },
         mounted: function() {
             var self = this;
             $(this.$el).datepicker({

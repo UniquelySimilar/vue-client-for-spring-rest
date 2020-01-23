@@ -14,9 +14,9 @@
 
             <div class="form-group">
                 <label for="orderDate" class="col-md-offset-2 col-md-2">Order Date</label>
-                <div class="col-md-4">
-                    <datepicker id="orderDate" v-if="displayDatepicker" :dateFormat="dateFormat" :dateType="1" :initialDate="order.orderDate"
-                     v-on:update-date="updateDate" v-once></datepicker>
+                <div class="col-md-2">
+                    <datepicker id="orderDate" :dateFormat="dateFormat" :dateType="1" :initialDate="order.orderDate"
+                     v-on:update-date="updateDate"></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -26,9 +26,9 @@
 
             <div class="form-group">
                 <label for="requiredDate" class="col-md-offset-2 col-md-2">Required Date</label>
-                <div class="col-md-4">
-                    <datepicker id="requiredDate" v-if="displayDatepicker" :dateFormat="dateFormat" :dateType="2" :initialDate="order.requiredDate"
-                     v-on:update-date="updateDate" v-once></datepicker>
+                <div class="col-md-2">
+                    <datepicker id="requiredDate" :dateFormat="dateFormat" :dateType="2" :initialDate="order.requiredDate"
+                     v-on:update-date="updateDate"></datepicker>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -36,12 +36,13 @@
                 </div>
             </div>
 
-            <!-- Only display Shipped Date for edit form-->
-            <div class="form-group" v-if="getOrderResponseReceived">
+            <!-- Only display Shipped Date on edit form-->
+            <div class="form-group" v-if="orderId">
                 <label for="shippedDate" class="col-md-offset-2 col-md-2">Shipped Date</label>
-                <div class="col-md-4">
-                    <datepicker id="shippedDate" v-if="displayDatepicker" :dateFormat="dateFormat" :dateType="3" :initialDate="order.shippedDate"
-                     v-on:update-date="updateDate" v-once></datepicker>
+                <div class="col-md-3">
+                    <datepicker id="shippedDate" :dateFormat="dateFormat" :dateType="3" :initialDate="order.shippedDate"
+                     v-on:update-date="updateDate"></datepicker>
+                     <button class="btn btn-default btn-xs btn-margin-left" @click.prevent="clearShippedDate">Clear</button>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -99,7 +100,6 @@
                 dateFormat: "yy-mm-dd",
                 // Hard code to noon Mountain Time for testing
                 timeZoneSuffix: "T12:00:00-06:00",
-                getOrderResponseReceived: false
             }
         },
         computed: {
@@ -116,9 +116,6 @@
                     btnLabel = "Update";
                 }
                 return btnLabel;
-            },
-            displayDatepicker() {
-                return (!this.orderId || this.getOrderResponseReceived);
             }
         },
         methods: {
@@ -136,22 +133,26 @@
                 return returnValue;
             },
             updateDate(payload) {
+                //console.log("updateDate payload.dtValue: " + payload.dtValue);
                 switch(payload.dtType) {
                     case 1:
-                        this.order.orderDate = payload.dtValue + this.timeZoneSuffix;
+                        this.order.orderDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New orderDate: " + this.order.orderDate);
                         break;
                     case 2:
-                        this.order.requiredDate = payload.dtValue + this.timeZoneSuffix;
+                        this.order.requiredDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New requiredDate: " + this.order.requiredDate);
                         break;
                     case 3:
-                        this.order.shippedDate = payload.dtValue + this.timeZoneSuffix;
+                        this.order.shippedDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New shippedDate: " + this.order.shippedDate);
                         break;
                     default:
                         console.log("ERROR: Unrecognized date type: " + payload.dtType);
                 }
+            },
+            clearShippedDate() {
+                this.order.shippedDate = null;
             },
             submitForm() {
                 axios({
@@ -190,8 +191,6 @@
             if (this.orderId) {
                 axios.get(orderRestUrl + this.orderId)
                 .then( response => {
-                    this.getOrderResponseReceived = true;
-                    //console.log("Default date: " + this.order.orderDate);
                     //console.log(response.data);
                     this.order = response.data;
                     // Change dates from milliseconds to format Datepicker can use
@@ -199,6 +198,13 @@
                     //console.log("Retrieved order orderDate: " + this.order.orderDate);
                     this.order.requiredDate = new Date(this.order.requiredDate);
                     //console.log("Retrieved order requiredDate: " + this.order.requiredDate);
+                    if (this.order.shippedDate) {   // NOT null from database/web service
+                        this.order.shippedDate = new Date(this.order.shippedDate);
+                        //console.log("Retrieved order shippedDate: " + this.order.shippedDate);
+                    }
+                    else {
+                        this.order.shippedDate = null;
+                    }
                 })
                 .catch( error => console.log(error));
             }
