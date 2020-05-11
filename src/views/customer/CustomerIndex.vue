@@ -121,7 +121,24 @@
             this.currentPage = 1;
             this.ascSort = true;
           })
-          .catch(error => console.log(error))
+          .catch(error => {
+            if (error.response) {
+              // Non-2xx status code
+              console.log('Non-2xx response status code')
+              console.error(error.response.status);
+            }
+            else if (error.request) {
+              // No response received
+              console.log('No response received to this request');
+              console.error(error.request);
+
+            }
+            else {
+              // Error setting up request
+              console.log('Error setting up request');
+              console.error(error.message);
+            }
+          })
       },
       incrementPage() {
         if (this.currentPage < this.pageCount) {

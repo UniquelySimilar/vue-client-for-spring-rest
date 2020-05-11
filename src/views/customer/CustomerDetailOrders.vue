@@ -65,7 +65,7 @@
             <router-link class="btn btn-default btn-margin-left" :to="{ name: 'customerIndex' }">Back</router-link>
         </div>
         <!--
-            TODO: Add edit, delete, and filter by status
+            TODO POSSIBILITY: Add filter by status
         <span class="table-subtitle">Click a status to manage Line Items</span>
         -->
         <div class="row">
