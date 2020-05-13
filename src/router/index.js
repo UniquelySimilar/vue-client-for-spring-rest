@@ -1,15 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import CustomerIndex from '../views/customer/CustomerIndex.vue'
+import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  // Login
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
   // Customers
   {
     path: '/customers',
     name: 'customerIndex',
-    component: CustomerIndex
+    component: () => import('../views/customer/CustomerIndex.vue'),
   },
   {
     path: '/customers/:customerId',

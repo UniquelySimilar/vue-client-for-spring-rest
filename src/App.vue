@@ -49,4 +49,8 @@
     color: red;
   }
 
+  .align-right {
+    text-align: right;
+  }
+
 </style>
