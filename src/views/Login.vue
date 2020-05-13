@@ -61,7 +61,7 @@
                 })
                 .then(response => {
                     // TODO: Pass token to parent
-                    this.token = response.data;
+                    this.token = response.data.message;
                     console.log(this.token);
                     // TODO: Redirect to customer index view with access to token
                 })
