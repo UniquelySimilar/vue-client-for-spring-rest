@@ -49,8 +49,7 @@
         data() {
             return {
                 username: '',
-                password: '',
-                token: ''
+                password: ''
             }
         },
         methods: {
@@ -60,9 +59,8 @@
                     password: this.password
                 })
                 .then(response => {
-                    // TODO: Pass token to parent
-                    this.token = response.data.message;
-                    console.log(this.token);
+                    // Commit the token to the store
+                    this.$store.commit('updateToken', { token: response.data.message });
                     // TODO: Redirect to customer index view with access to token
                 })
                 .catch(error => {

@@ -85,6 +85,9 @@
       }
     },
     computed: {
+      token() {
+        return this.$store.state.token;
+      },
       pageCount() {
         return Math.ceil(this.customers.length / this.pageSize);
       },
@@ -112,7 +115,13 @@
     methods: {
       getCustomers() {
         this.searchTerm = '';
-        axios.get(customerRestUrl)
+        console.log('CustomerIndex this.token: ' + this.token)
+        console.log(this.$store.state)
+        axios.get(customerRestUrl, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
           .then(response => {
             this.customers = response.data;
             // Initialize sort to lastName ascending
