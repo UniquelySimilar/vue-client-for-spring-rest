@@ -115,8 +115,7 @@
     methods: {
       getCustomers() {
         this.searchTerm = '';
-        console.log('CustomerIndex this.token: ' + this.token)
-        console.log(this.$store.state)
+        //console.log('CustomerIndex this.token: ' + this.token)
         axios.get(customerRestUrl, {
           headers: {
             'Authorization': 'Bearer ' + this.token

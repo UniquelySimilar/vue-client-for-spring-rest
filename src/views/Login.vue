@@ -61,7 +61,8 @@
                 .then(response => {
                     // Commit the token to the store
                     this.$store.commit('updateToken', { token: response.data.message });
-                    // TODO: Redirect to customer index view with access to token
+                    // Redirect to customer index view
+                    this.$router.push("/customers")
                 })
                 .catch(error => {
                     if (error.response) {
@@ -78,6 +79,11 @@
                     }
 
                 })
+            }
+        },
+        computed: {
+            token() {
+                return this.$store.state.token;
             }
         }
     }
