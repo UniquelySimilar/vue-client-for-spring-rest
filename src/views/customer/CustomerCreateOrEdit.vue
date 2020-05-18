@@ -157,6 +157,9 @@
                 }
                 return btnLabel;
             },
+            token() {
+                return this.$store.state.token;
+            }
         },
         methods: {
             getValidationError(fieldName) {
@@ -176,7 +179,10 @@
                 axios({
                     method: this.customerId ? 'put' : 'post',
                     url: customerRestUrl,
-                    data: JSON.stringify(this.customer)
+                    data: JSON.stringify(this.customer),
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token
+                    }
                 })
                     .then(() => {
                         // Redirect back to Index view
@@ -193,6 +199,7 @@
                             else {
                                 console.log(error.response.status);
                             }
+                            // TODO: If 401 error, redirect to login page
                         } else if (error.request) {
                             // The request was made but no response was received
                             // `error.request` is an instance of XMLHttpRequest in the browser
@@ -207,14 +214,19 @@
         // Lifecycle hooks
         created() {
             if (this.customerId) {
-                axios.get(customerRestUrl + this.customerId)
-                    .then(response => {
-                        this.customer = response.data;
-                        //console.log(JSON.stringify(this.customer));
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                axios.get(customerRestUrl + this.customerId, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token
+                    }
+                })
+                .then(response => {
+                    this.customer = response.data;
+                    //console.log(JSON.stringify(this.customer));
+                })
+                .catch(error => {
+                    console.log(error);
+                    // TODO: If 401 error, redirect to login page
+                });
             }
         }
     }

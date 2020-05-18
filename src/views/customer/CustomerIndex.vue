@@ -130,6 +130,7 @@
             this.ascSort = true;
           })
           .catch(error => {
+            // TODO: If 401 error redirect to login page
             if (error.response) {
               // Non-2xx status code
               console.log('Non-2xx response status code')
@@ -213,7 +214,11 @@
         if (!confirm("Delete customer " + customerName + "?"))
           return;
 
-        axios.delete(customerRestUrl + id)
+        axios.delete(customerRestUrl + id, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
         .then( () => {
           // Remove the related customer object from the customers array
           this.customers = this.unfilteredCustomers.filter(customer => {
@@ -223,7 +228,10 @@
           // Update unfiltered customer array to reflect deletion
           this.unfilteredCustomers = this.customers.slice();
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          // TODO: If 401 error, redirect to login page
+          console.log(error);
+        })
       }
     },
     // Lifecycle hooks
