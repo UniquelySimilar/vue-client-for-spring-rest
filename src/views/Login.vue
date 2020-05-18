@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import { loginUrl, axios } from '../globalvars.js'
+    import { loginUrl, axios, processAjaxLoginError } from '../globalvars.js'
 
     export default {
         name: 'Login',
@@ -57,23 +57,7 @@
                     this.$router.push("/customers")
                 })
                 .catch(error => {
-                    if (error.response) {
-                        if (error.response.status == 401) {
-                            this.errorMsg = error.response.data.message;
-                        }
-                        else {
-                            console.error("Response contains error code " + error.response.status);
-                        }
-                    }
-                    else if (error.request) {
-                        console.error("No response received so logging request");
-                        console.error(error.request);
-                    }
-                    else {
-                        console.error("Problem with request");
-                        console.error(error.message);
-                    }
-
+                    this.errorMsg = processAjaxLoginError(error);
                 })
             }
         },

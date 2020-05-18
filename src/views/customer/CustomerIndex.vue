@@ -70,7 +70,7 @@
 </template>
 
 <script>
-  import { customerRestUrl, axios } from '../../globalvars.js'
+  import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
 
   export default {
     name: 'CustomerIndex',
@@ -130,23 +130,7 @@
             this.ascSort = true;
           })
           .catch(error => {
-            // TODO: If 401 error redirect to login page
-            if (error.response) {
-              // Non-2xx status code
-              console.log('Non-2xx response status code')
-              console.error(error.response.status);
-            }
-            else if (error.request) {
-              // No response received
-              console.log('No response received to this request');
-              console.error(error.request);
-
-            }
-            else {
-              // Error setting up request
-              console.log('Error setting up request');
-              console.error(error.message);
-            }
+            processAjaxAuthError(error, this.$router);
           })
       },
       incrementPage() {
@@ -229,8 +213,7 @@
           this.unfilteredCustomers = this.customers.slice();
         })
         .catch(error => {
-          // TODO: If 401 error, redirect to login page
-          console.log(error);
+          processAjaxAuthError(error, this.$router);
         })
       }
     },

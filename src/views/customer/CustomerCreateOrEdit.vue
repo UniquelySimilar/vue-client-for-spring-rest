@@ -108,7 +108,7 @@
 </template>
 
 <script>
-    import { customerRestUrl, axios } from '../../globalvars.js'
+    import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
 
     export default {
         name: "CustomerCreateOrEdit",
@@ -224,8 +224,7 @@
                     //console.log(JSON.stringify(this.customer));
                 })
                 .catch(error => {
-                    console.log(error);
-                    // TODO: If 401 error, redirect to login page
+                    processAjaxAuthError(error, this.$router);
                 });
             }
         }
