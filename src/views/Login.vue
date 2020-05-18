@@ -10,29 +10,18 @@
                 <div class="col-md-3">
                     <input type="input" class="form-control" id="username" v-model="username">
                 </div>
-                <!--
-                <div class="col-md-4 error-msg">
-                    <span>*&nbsp;</span>
-                    <span>{{ getValidationError('firstName') }}</span>
-                </div>
-                -->
             </div>
             <div class="form-group">
                 <label for="password" class="col-md-offset-3 col-md-2 align-right">Password</label>
                 <div class="col-md-3">
                     <input type="password" class="form-control" id="password" v-model="password">
                 </div>
-                <!--
-                <div class="col-md-4 error-msg">
-                    <span>*&nbsp;</span>
-                    <span>{{ getValidationError('lastName') }}</span>
-                </div>
-                -->
             </div>
             <div class="form-group">
-                <div class="col-md-offset-5 col-md-2">
+                <div class="col-md-offset-5 col-md-4">
                     <button type="button" class="btn btn-default"
                         v-on:click="login">Login</button>
+                    <span class="error-msg" v-if="errorMsg">{{ errorMsg }}</span>
                 </div>
             </div>
         </form>
@@ -49,7 +38,8 @@
         data() {
             return {
                 username: '',
-                password: ''
+                password: '',
+                errorMsg: ''
             }
         },
         methods: {
@@ -61,13 +51,19 @@
                 .then(response => {
                     // Commit the token to the store
                     this.$store.commit('updateToken', { token: response.data.message });
+                    // Clear error message
+                    this.errorMsg = '';
                     // Redirect to customer index view
                     this.$router.push("/customers")
                 })
                 .catch(error => {
                     if (error.response) {
-                        console.error("Response error code");
-                        console.error(error.response);
+                        if (error.response.status == 401) {
+                            this.errorMsg = error.response.data.message;
+                        }
+                        else {
+                            console.error("Response contains error code " + error.response.status);
+                        }
                     }
                     else if (error.request) {
                         console.error("No response received so logging request");
@@ -91,5 +87,10 @@
 </script>
 
 <style scoped>
+    .error-msg {
+        margin-left: 2em;
+        color: red;
+        font-weight: bold
+    }
 
 </style>
