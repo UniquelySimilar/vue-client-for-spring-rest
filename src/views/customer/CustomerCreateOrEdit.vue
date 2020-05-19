@@ -184,31 +184,33 @@
                         'Authorization': 'Bearer ' + this.token
                     }
                 })
-                    .then(() => {
-                        // Redirect back to Index view
-                        this.$router.push({ name: 'customerIndex' });
-                    })
-                    .catch(error => {
-                        if (error.response) {
-                            // The request was made and the server responded with a status code that falls out of the range of 2xx
-                            if (error.response.status == 400) {
-                                // Validation error
-                                //console.log('validation error');
-                                this.validationErrors = error.response.data;
-                            }
-                            else {
-                                console.log(error.response.status);
-                            }
-                            // TODO: If 401 error, redirect to login page
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser
-                            console.error(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.error('Error', error.message);
+                .then(() => {
+                    // Redirect back to Index view
+                    this.$router.push({ name: 'customerIndex' });
+                })
+                .catch(error => {
+                    if (error.response) {
+                        // The request was made and the server responded with a status code that falls out of the range of 2xx
+                        if (error.response.status == 400) {
+                            // Validation error
+                            //console.log('validation error');
+                            this.validationErrors = error.response.data;
                         }
-                    });
+                        else if (error.response.status == 401) {
+                            console.log("401 error so redirect to login");
+                            this.$router.push("/login");
+                        }
+                        else {
+                            console.error("Response contains error code " + error.response.status);
+                        }
+                    } else if (error.request) {
+                        console.error("No response received so logging request");
+                        console.error(error.request);
+                    } else {
+                        console.error("Problem with request");
+                        console.error(error.message);
+                    }
+                });
             }
         },
         // Lifecycle hooks

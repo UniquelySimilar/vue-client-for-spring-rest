@@ -159,22 +159,31 @@
                 .catch(error => console.log(error));
             }
         },
+        computed: {
+            token() {
+                return this.$store.state.token;
+            }
+        },
         // Lifecycle hooks
         created() {
-            axios.get(customerRestUrl + this.customerId + "/orders")
-                .then(response => {
-                    //console.log(response.data);
-                    this.customer = response.data.customer;
-                    this.customer.id = parseInt(this.customer.id);
-                    this.orders = response.data.orders;
-                    this.orders.forEach(order => {
-                        order.id = parseInt(order.id);
-                        //console.log(order);
-                    });
-                })
-                .catch(error => {
-                    console.log(error);
+            axios.get(customerRestUrl + this.customerId + "/orders", {
+                headers: {
+                    'Authorization': 'Bearer ' + this.token
+                }
+            })
+            .then(response => {
+                //console.log(response.data);
+                this.customer = response.data.customer;
+                this.customer.id = parseInt(this.customer.id);
+                this.orders = response.data.orders;
+                this.orders.forEach(order => {
+                    order.id = parseInt(order.id);
+                    //console.log(order);
                 });
+            })
+            .catch(error => {
+                console.log(error);
+            });
         }
     }
 </script>
