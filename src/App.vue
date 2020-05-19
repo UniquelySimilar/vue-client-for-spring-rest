@@ -3,11 +3,24 @@
     <div class="row">
       <header>
         <span>Customer Manager Client Application for Spring REST Service</span>
+        <button class="btn btn-default pull-right btn-sm" v-on:click="logout()">Log Out</button>
       </header>
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+  export default {
+    name: 'App',
+    methods: {
+      logout() {
+        this.$store.commit('updateToken', { token: '' });
+        this.$router.push("/login");
+      }
+    }
+  }
+</script>
 
 <style>
   #app {
