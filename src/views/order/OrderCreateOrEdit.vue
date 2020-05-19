@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import { orderRestUrl, axios } from '../../globalvars.js'
+    import { orderRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
     import Datepicker from '../../components/Datepicker.vue'
 
     export default {
@@ -103,6 +103,9 @@
             }
         },
         computed: {
+            token() {
+                return this.$store.state.token;
+            },
             pageHeading() {
                 let heading = "New Order";
                 if (this.orderId) {
@@ -158,7 +161,10 @@
                 axios({
                     method: this.orderId ? 'put' : 'post',
                     url: orderRestUrl,
-                    data: JSON.stringify(this.order)
+                    data: JSON.stringify(this.order),
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token
+                    }
                 })
                 .then(() => {
                     // Redirect back to CustomerDetailOrders view
@@ -171,17 +177,18 @@
                             // Validation error
                             this.validationErrors = error.response.data;
                         }
+                        else if (error.response.status == 401) {
+                            console.log("401 error so redirect to login");
+                            this.$router.push("/login");
+                        }
                         else {
-                            console.log(error.response.status);
-                            //console.log(error.response);
+                            console.error("Response contains error code " + error.response.status);
                         }
                     } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser
+                        console.error("No response received so logging request");
                         console.error(error.request);
                     } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.error('Error', error.message);
+                        console.error("Problem with request: " + error.message);
                     }
                 });
             },
@@ -189,7 +196,11 @@
         // Lifecycle hooks
         created() {
             if (this.orderId) {
-                axios.get(orderRestUrl + this.orderId)
+                axios.get(orderRestUrl + this.orderId, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token
+                    }
+                })
                 .then( response => {
                     //console.log(response.data);
                     this.order = response.data;
@@ -206,7 +217,9 @@
                         this.order.shippedDate = null;
                     }
                 })
-                .catch( error => console.log(error));
+                .catch( error => {
+                    processAjaxAuthError(error, this.$router);
+                });
             }
         }
     }

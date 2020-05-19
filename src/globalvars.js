@@ -24,8 +24,7 @@ const processAjaxLoginError = function(error) {
         console.error(error.request);
     }
     else {
-        console.error("Problem with request");
-        console.error(error.message);
+        console.error("Problem with request: " + error.message);
     }
 
     return errorMsg;
@@ -46,8 +45,7 @@ const processAjaxAuthError = function(error, router) {
         console.error(error.request);
     }
     else {
-        console.error("Problem with request");
-        console.error(error.message);
+        console.error("Problem with request: " + error.message);
     }
 }
 

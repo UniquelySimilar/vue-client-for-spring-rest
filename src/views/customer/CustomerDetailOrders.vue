@@ -98,7 +98,7 @@
 </template>
 
 <script>
-    import { customerRestUrl, orderRestUrl, axios } from '../../globalvars.js'
+    import { customerRestUrl, orderRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
 
     export default {
         name: "CustomerDetailOrders",
@@ -149,14 +149,20 @@
                     return;
                 }
 
-                axios.delete(orderRestUrl + id)
+                axios.delete(orderRestUrl + id, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token
+                    }
+                })
                 .then( () => {
                     // Remove order from orders array
                     this.orders = this.orders.filter( order => {
                         return order.id !== id;
                     });
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    processAjaxAuthError(error, this.$router);
+                });
             }
         },
         computed: {
