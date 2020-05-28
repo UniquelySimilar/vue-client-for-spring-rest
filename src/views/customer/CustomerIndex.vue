@@ -5,8 +5,12 @@
       <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>
       <button type="button" class="btn btn-default btn-margin-left" v-on:click="getCustomers()">Refresh</button>
       <div style="float: right;">
-        <span>Search by last name: </span><input type="text" v-model="searchTerm" v-on:keyup="searchLastName()">
-        <button type="button" class="btn btn-default btn-sm" style="margin-left: 1em;" v-on:click="clearSearch()">Clear</button>
+        <span>Filter by </span>
+        <select v-model="filterCriteria" v-on:change="clearFilter()" style="margin-right: 0.5em;">
+          <option v-for="criteria in filterCriteriaOptions" v-bind:key="criteria">{{ criteria }}</option>
+        </select>
+        <input type="text" v-model="filterTerm" v-on:keyup="filterCustomers()">
+        <button type="button" class="btn btn-default btn-sm" style="margin-left: 1em;" v-on:click="clearFilter()">Clear</button>
       </div>
     </div>
     <span class="table-subtitle">Click a last name to manage Orders</span>
@@ -81,7 +85,9 @@
         currentPage: 1,
         pageSize: 10,
         ascSort: true,
-        searchTerm: ""
+        filterTerm: "", 
+        filterCriteria: 'last name',
+        filterCriteriaOptions: ['last name', 'state']
       }
     },
     computed: {
@@ -114,7 +120,7 @@
     },
     methods: {
       getCustomers() {
-        this.searchTerm = '';
+        this.filterTerm = '';
         //console.log('CustomerIndex this.token: ' + this.token)
         axios.get(customerRestUrl, {
           headers: {
@@ -176,22 +182,31 @@
         }
         return 0;
       },
-      searchLastName() {
-        if (this.searchTerm.length < 1) {
+      filterCustomers() {
+        if (this.filterTerm.length < 1) {
           // Reset in case hitting backspace
           this.customers = this.unfilteredCustomers.slice();
           this.currentPage = 1;
           return;
         }
 
-        // Filter customers by last name
-        this.customers = this.unfilteredCustomers.filter(customer => {
-          return customer.lastName.toLowerCase().substring(0, this.searchTerm.length) === this.searchTerm.toLowerCase();
-        });
+        if (this.filterCriteria == 'state') {
+          // Filter customers by state
+          this.customers = this.unfilteredCustomers.filter(customer => {
+            return customer.state.toLowerCase().substring(0, this.filterTerm.length) === this.filterTerm.toLowerCase();
+          });
+        }
+        else {
+          // Filter customers by last name
+          this.customers = this.unfilteredCustomers.filter(customer => {
+            return customer.lastName.toLowerCase().substring(0, this.filterTerm.length) === this.filterTerm.toLowerCase();
+          });
+        }
+
         this.currentPage = 1;
       },
-      clearSearch() {
-        this.searchTerm = '';
+      clearFilter() {
+        this.filterTerm = '';
         this.getCustomers();
       },
       deleteCustomer(id, customerName) {
