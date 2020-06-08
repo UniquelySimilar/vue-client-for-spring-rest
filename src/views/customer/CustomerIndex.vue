@@ -5,12 +5,11 @@
       <router-link class="btn btn-default" :to="{ name: 'customerCreate' }">Create Customer</router-link>
       <button type="button" class="btn btn-default btn-margin-left" v-on:click="getCustomers()">Refresh</button>
       <div style="float: right;">
-        <span>Filter by </span>
-        <select v-model="filterCriteria" v-on:change="clearFilter()" style="margin-right: 0.5em;">
-          <option v-for="criteria in filterCriteriaOptions" v-bind:key="criteria">{{ criteria }}</option>
-        </select>
-        <input type="text" v-model="filterTerm" v-on:keyup="filterCustomers()">
-        <button type="button" class="btn btn-default btn-sm" style="margin-left: 1em;" v-on:click="clearFilter()">Clear</button>
+        <filter-input
+          v-bind:criteriaOptions="filterCriteriaOptions"
+          v-bind:initialCriteria="filterCriteria"
+          v-on:update-criteria="updateCriteria"
+          v-on:update-filter-term="updateFilterTerm"></filter-input>
       </div>
     </div>
     <span class="table-subtitle">Click a last name to manage Orders</span>
@@ -75,6 +74,7 @@
 
 <script>
   import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+  import FilterInput from '../../components/FilterInput.vue'
 
   export default {
     name: 'CustomerIndex',
@@ -85,10 +85,13 @@
         currentPage: 1,
         pageSize: 10,
         ascSort: true,
-        filterTerm: "", 
+        filterTerm: '',
         filterCriteria: 'last name',
         filterCriteriaOptions: ['last name', 'state']
       }
+    },
+    components: {
+      FilterInput
     },
     computed: {
       token() {
@@ -204,9 +207,12 @@
           return customer[propName].toLowerCase().substring(0, this.filterTerm.length) === this.filterTerm.toLowerCase();
         });
       },
-      clearFilter() {
-        this.filterTerm = '';
-        this.getCustomers();
+      updateCriteria(newCriteria) {
+        this.filterCriteria = newCriteria;
+      },
+      updateFilterTerm(newFilterTerm) {
+        this.filterTerm = newFilterTerm;
+        this.filterCustomers();
       },
       deleteCustomer(id, customerName) {
         if (!confirm("Delete customer " + customerName + "?"))
