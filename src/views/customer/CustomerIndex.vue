@@ -191,19 +191,18 @@
         }
 
         if (this.filterCriteria == 'state') {
-          // Filter customers by state
-          this.customers = this.unfilteredCustomers.filter(customer => {
-            return customer.state.toLowerCase().substring(0, this.filterTerm.length) === this.filterTerm.toLowerCase();
-          });
+          this.customers = this.filterCustomerArray('state');
         }
-        else {
-          // Filter customers by last name
-          this.customers = this.unfilteredCustomers.filter(customer => {
-            return customer.lastName.toLowerCase().substring(0, this.filterTerm.length) === this.filterTerm.toLowerCase();
-          });
+        else if (this.filterCriteria == 'last name') {
+          this.customers = this.filterCustomerArray('lastName');
         }
 
         this.currentPage = 1;
+      },
+      filterCustomerArray(propName) {
+        return this.unfilteredCustomers.filter(customer => {
+          return customer[propName].toLowerCase().substring(0, this.filterTerm.length) === this.filterTerm.toLowerCase();
+        });
       },
       clearFilter() {
         this.filterTerm = '';
