@@ -42,7 +42,7 @@
                 <div class="col-md-3">
                     <datepicker id="shippedDate" :dateFormat="dateFormat" :dateType="3" :initialDate="order.shippedDate"
                      v-on:update-date="updateDate"></datepicker>
-                     <button class="btn btn-default btn-xs btn-margin-left" @click.prevent="clearShippedDate">Clear</button>
+                     <button type="button" class="btn btn-default btn-xs btn-margin-left" @click="clearShippedDate">Clear</button>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
