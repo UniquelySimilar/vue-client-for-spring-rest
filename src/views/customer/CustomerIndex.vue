@@ -9,7 +9,7 @@
           v-bind:criteriaOptions="filterCriteriaOptions"
           v-bind:initialCriteria="filterCriteria"
           v-on:update-criteria="updateCriteria"
-          v-on:update-filter-term="updateFilterTerm"></filter-input>
+          v-on:update-filter-term="updateFilterTerm" />
       </div>
     </div>
     <span class="table-subtitle">Click a last name to manage Orders</span>
@@ -62,19 +62,18 @@
         </li>
       </ul>
     </nav>
-    <div id="current-page">
-      <label style="margin: 0 0.4em; font-weight: normal;">Page</label>
-      <select v-model="currentPage">
-        <option v-for="page in pageList" v-bind:key="page">{{page}}</option>
-      </select>
-      <span> of {{pageCount}}</span>
-    </div>
+    <page-select
+      v-bind:page-list="pageList"
+      v-bind:page-count="pageCount"
+      v-bind:current-page="currentPage"
+      v-on:pageSelectChangeEvt="pageSelectChange" />
   </div>
 </template>
 
 <script>
   import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
   import FilterInput from '../../components/FilterInput.vue'
+  import PageSelect from '../../components/PageSelect.vue'
 
   export default {
     name: 'CustomerIndex',
@@ -91,7 +90,8 @@
       }
     },
     components: {
-      FilterInput
+      FilterInput,
+      PageSelect
     },
     computed: {
       token() {
@@ -235,6 +235,9 @@
         .catch(error => {
           processAjaxAuthError(error, this.$router);
         })
+      },
+      pageSelectChange(newPage) {
+        this.currentPage = parseInt(newPage, 10);
       }
     },
     // Lifecycle hooks
@@ -247,11 +250,5 @@
 <style scoped>
   nav {
     display: inline-block;
-  }
-
-  #current-page {
-    display: inline-block;
-    margin: 21px 0 19px 10px;
-    vertical-align: top;
   }
 </style>
