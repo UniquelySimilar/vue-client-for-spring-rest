@@ -46,22 +46,12 @@
         </tr>
       </tbody>
     </table>
-    <nav aria-label="Page navigation">
-      <ul class="pagination">
-        <li>
-          <a href="#" v-on:click="goToFirstPage()">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li><a href="#" aria-label="Previous" v-on:click="decrementPage()">prev</a></li>
-        <li><a href="#" aria-label="Next" v-on:click="incrementPage()">next</a></li>
-        <li>
-          <a href="#" v-on:click="goToLastPage()">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <pagination-control
+      v-on:goToFirstPageEvt="goToFirstPage"
+      v-on:decrementPageEvt="decrementPage"
+      v-on:incrementPageEvt="incrementPage"
+      v-on:goToLastPageEvt="goToLastPage"
+      />
     <page-select
       v-bind:page-list="pageList"
       v-bind:page-count="pageCount"
@@ -73,6 +63,7 @@
 <script>
   import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
   import FilterInput from '../../components/FilterInput.vue'
+  import PaginationControl from '../../components/PaginationControl.vue'
   import PageSelect from '../../components/PageSelect.vue'
 
   export default {
@@ -91,6 +82,7 @@
     },
     components: {
       FilterInput,
+      PaginationControl,
       PageSelect
     },
     computed: {
@@ -248,7 +240,5 @@
 </script>
 
 <style scoped>
-  nav {
-    display: inline-block;
-  }
+
 </style>
