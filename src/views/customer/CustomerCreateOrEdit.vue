@@ -81,7 +81,12 @@
             <div class="form-group">
                 <label for="work-phone" class="col-md-offset-2 col-md-2">Work Phone</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="work-phone" v-model="customer.workPhone">
+                    <digits-input component-class="form-control" component-id="work-phone"
+                      :num-digits="10" :initial-value="customer.workPhone" v-on:updatePhone="updateWorkPhone"/>
+                </div>
+                <div class="col-md-4 error-msg">
+                    <span>*&nbsp;</span>
+                    <span>{{ getValidationError('workPhone') }}</span>
                 </div>
             </div>
             <div class="form-group">
@@ -216,6 +221,9 @@
             },
             updateHomePhone(newValue) {
                 this.customer.homePhone = newValue;
+            },
+            updateWorkPhone(newValue) {
+                this.customer.workPhone = newValue;
             }
         },
         // Lifecycle hooks
