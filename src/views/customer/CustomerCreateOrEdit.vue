@@ -51,9 +51,6 @@
                     <select class="form-control" v-model="customer.state">
                         <option v-for="state in stateList" v-bind:key="state">{{state}}</option>
                     </select>
-                    <!--
-                    <input type="input" class="form-control" id="state" v-model="customer.state">
-                    -->
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -73,7 +70,8 @@
             <div class="form-group">
                 <label for="home-phone" class="col-md-offset-2 col-md-2">Home Phone</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="home-phone" v-model="customer.homePhone">
+                    <digits-input component-class="form-control" component-id="home-phone"
+                      :num-digits="10" :initial-value="customer.homePhone" v-on:updatePhone="updateHomePhone"/>
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -109,9 +107,13 @@
 
 <script>
     import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+    import DigitsInput from '../../components/DigitsInput.vue'
 
     export default {
         name: "CustomerCreateOrEdit",
+        components: {
+            DigitsInput
+        },
         props: {
             customerId: {
                 type: Number,
@@ -211,6 +213,9 @@
                         console.error(error.message);
                     }
                 });
+            },
+            updateHomePhone(newValue) {
+                this.customer.homePhone = newValue;
             }
         },
         // Lifecycle hooks
