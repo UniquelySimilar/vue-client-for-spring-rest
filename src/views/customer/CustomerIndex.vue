@@ -41,7 +41,7 @@
             <router-link :to="{ name: 'customerEdit', params: {customerId: customer.id} }">Edit</router-link>
           </td>
           <td>
-            <a href="#" v-on:click="deleteCustomer(customer.id, customer.firstName + ' ' + customer.lastName)">Delete</a>
+            <a href="#" v-on:click="displayDeleteModal(customer.id, customer.firstName + ' ' + customer.lastName)">Delete</a>
           </td>
         </tr>
       </tbody>
@@ -57,6 +57,13 @@
       v-bind:page-count="pageCount"
       v-bind:current-page="currentPage"
       v-on:pageSelectChangeEvt="pageSelectChange" />
+
+    <delete-modal
+      v-if="deleteModal"
+      :deleteCustomerName="deleteCustomerName"
+      @closeDeleteModalEvent="closeDeleteModal"
+      @deleteRecordEvent="deleteCustomer" />
+
   </div>
 </template>
 
@@ -65,6 +72,7 @@
   import FilterInput from '../../components/FilterInput.vue'
   import PaginationControl from '../../components/PaginationControl.vue'
   import PageSelect from '../../components/PageSelect.vue'
+  import DeleteModal from '../../components/DeleteModal.vue'
 
   export default {
     name: 'CustomerIndex',
@@ -77,13 +85,17 @@
         ascSort: true,
         filterTerm: '',
         filterCriteria: 'last name',
-        filterCriteriaOptions: ['last name', 'state']
+        filterCriteriaOptions: ['last name', 'state'],
+        deleteModal: false,
+        deleteCustomerId: 0,
+        deleteCustomerName: ''
       }
     },
     components: {
       FilterInput,
       PaginationControl,
-      PageSelect
+      PageSelect,
+      DeleteModal
     },
     computed: {
       token() {
@@ -116,7 +128,6 @@
     methods: {
       getCustomers() {
         this.filterTerm = '';
-        //console.log('CustomerIndex this.token: ' + this.token)
         axios.get(customerRestUrl, {
           headers: {
             'Authorization': 'Bearer ' + this.token
@@ -206,9 +217,17 @@
         this.filterTerm = newFilterTerm;
         this.filterCustomers();
       },
-      deleteCustomer(id, customerName) {
-        if (!confirm("Delete customer " + customerName + "?"))
-          return;
+      displayDeleteModal(id, customerName) {
+        this.deleteCustomerId = id;
+        this.deleteCustomerName = customerName;
+        this.deleteModal = true;
+      },
+      closeDeleteModal() {
+        this.deleteModal = false;
+      },
+      deleteCustomer() {
+        this.deleteModal = false;
+        let id = this.deleteCustomerId;
 
         axios.delete(customerRestUrl + id, {
           headers: {
