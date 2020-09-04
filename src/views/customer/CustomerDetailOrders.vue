@@ -59,7 +59,7 @@
             </div>
         </div>
         <hr>
-        <order-index v-if="customer.id" v-bind:customerId="customer.id" v-bind:initialOrders="orders"></order-index>
+        <order-index v-if="customer.id" v-bind:customerId="customer.id" v-bind:initialOrders="customer.orders"></order-index>
         <hr>
         <router-link class="btn btn-default" :to="{ name: 'customerIndex' }">Back</router-link>
     </div>
@@ -83,9 +83,9 @@
         data() {
             return {
                 customer: {
-                    id: 0
+                    id: 0,
+                    orders: []
                 },
-                orders: []
             }
         },
         methods: {
@@ -109,8 +109,8 @@
                 //console.log(response.data);
                 this.customer = response.data.customer;
                 this.customer.id = parseInt(this.customer.id);
-                this.orders = response.data.orders;
-                this.orders.forEach(order => {
+                this.customer.orders = response.data.orders;
+                this.customer.orders.forEach(order => {
                     order.id = parseInt(order.id);
                     //console.log(order);
                 });
