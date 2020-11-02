@@ -27,9 +27,12 @@
             }
         },
         watch: {
-            initialDate() {
-                // NOTE: Need watch on this prop since need to explicitly update wrapped jQuery datepicker
-                $(this.$el).datepicker("setDate", this.initialDate);
+            initialDate(newDate) {
+                // NOTE: Need a watch on this prop to explicitly update the wrapped jQuery datepicker.
+                // The parent data passed via this prop is initialized from an AJAX call AFTER this child component is rendered.
+                // Could modify this component in parent with <datepicker v-if="dataLoaded" ... > but that would delay rendering whole
+                // component, not just value in input.
+                $(this.$el).datepicker("setDate", newDate);
             }
         },
         mounted: function() {
