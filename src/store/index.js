@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        token: "empty-token"
+        token: ''
     },
     mutations: {
         updateToken(state, payload) {

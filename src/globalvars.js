@@ -1,5 +1,6 @@
 const baseUrl = "http://localhost:8008/ordersrestapi";
-const loginUrl = baseUrl + "/login/login";
+const loginUrl = baseUrl + "/login";
+const logoutUrl = baseUrl + "/api/logout";
 const customerRestUrl = baseUrl + "/api/customers/";
 const orderRestUrl = baseUrl + "/api/orders/";
 
@@ -58,6 +59,7 @@ const processAjaxAuthError = function(error, router) {
 
 export {
     loginUrl,
+    logoutUrl,
     customerRestUrl,
     orderRestUrl,
     axios,

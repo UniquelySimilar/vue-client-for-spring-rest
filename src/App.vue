@@ -11,12 +11,28 @@
 </template>
 
 <script>
+  import { logoutUrl, axios } from './globalvars.js'
+
   export default {
     name: 'App',
+    computed: {
+      token() {
+        return this.$store.state.token;
+      }
+    },
     methods: {
       logout() {
-        this.$store.commit('updateToken', { token: '' });
-        this.$router.push("/login");
+        axios.put(logoutUrl, {}, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then()
+        .catch( error => console.error(error))
+        .finally( () => {
+          this.$store.commit('updateToken', { token: '' });
+          this.$router.push("/login");
+        }) 
       }
     }
   }
