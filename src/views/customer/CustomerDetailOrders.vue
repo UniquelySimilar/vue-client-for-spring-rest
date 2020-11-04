@@ -106,13 +106,10 @@
                 }
             })
             .then(response => {
-                //console.log(response.data);
-                this.customer = response.data.customer;
+                this.customer = response.data;
                 this.customer.id = parseInt(this.customer.id);
-                this.customer.orders = response.data.orders;
                 this.customer.orders.forEach(order => {
                     order.id = parseInt(order.id);
-                    //console.log(order);
                 });
             })
             .catch(error => {
