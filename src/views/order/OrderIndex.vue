@@ -19,6 +19,7 @@
                             <th>Shipped Date</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,6 +28,7 @@
                             <td>{{ formatDate(order.orderDate) }}</td>
                             <td>{{ formatDate(order.requiredDate) }}</td>
                             <td>{{ formatDate(order.shippedDate) }}</td>
+                            <td><router-link :to="{ name: 'orderDetailLineItems', params: { orderId: order.id } }">Detail</router-link></td>
                             <td><router-link :to="{ name: 'orderEdit', params: { customerId: customerId, orderId: order.id } }">Edit</router-link></td>
                             <td><a href="#" v-on:click="deleteOrder(order.id)">Delete</a></td>
                         </tr>
@@ -38,7 +40,7 @@
 </template>
 
 <script>
-    import { orderRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+    import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr, formatDate } from '../../globalvars.js'
 
     export default {
         name: 'OrderIndex',
@@ -63,32 +65,6 @@
             }
         },
         methods: {
-            formatDate(milliseconds) {
-                if (!milliseconds)
-                    return;
-
-                let date = new Date(milliseconds);
-                return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-            },
-            getOrderStatusStr(status) {
-                let statusStr = "Unknown";
-
-                switch(status) {
-                    case 1:
-                        statusStr = "Pending";
-                        break;
-                    case 2:
-                        statusStr = "Processing";
-                        break;
-                    case 3:
-                        statusStr = "Rejected";
-                        break;
-                    case 4:
-                        statusStr = "Completed";
-                }
-
-                return statusStr;
-            },
             deleteOrder(id) {
                 if (!confirm("Delete order")) {
                     return;
@@ -108,7 +84,9 @@
                 .catch(error => {
                     processAjaxAuthError(error, this.$router);
                 });
-            }
+            },
+            getOrderStatusStr,
+            formatDate
         }
     }
 

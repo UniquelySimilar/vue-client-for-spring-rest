@@ -57,6 +57,35 @@ const processAjaxAuthError = function(error, router) {
     }
 }
 
+const getOrderStatusStr = function(status) {
+    let statusStr = "Unknown";
+
+    switch(status) {
+        case 1:
+            statusStr = "Pending";
+            break;
+        case 2:
+            statusStr = "Processing";
+            break;
+        case 3:
+            statusStr = "Rejected";
+            break;
+        case 4:
+            statusStr = "Completed";
+    }
+
+    return statusStr;
+}
+
+const formatDate = function(milliseconds) {
+    if (!milliseconds)
+        return;
+
+    let date = new Date(milliseconds);
+    return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+}
+
+
 export {
     loginUrl,
     logoutUrl,
@@ -65,5 +94,7 @@ export {
     axios,
     processAjaxLoginError,
     processAjaxAuthError,
+    getOrderStatusStr,
+    formatDate,
     stateList
 }

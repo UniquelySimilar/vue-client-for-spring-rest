@@ -42,6 +42,12 @@ const routes = [
   },
   // Orders
   {
+    path: '/orders/:orderId',
+    name: 'orderDetailLineItems',
+    component: () => import('../views/order/OrderDetailLineItems.vue'),
+    props: true
+  },
+  {
     path: '/customers/:customerId/orders/create',
     name: 'orderCreate',
     component: () => import('../views/order/OrderCreateOrEdit.vue'),
