@@ -33,14 +33,20 @@
       </div>
     </div>
     <hr>
+    <line-item-index v-if="order.id" v-bind:orderId="order.id" v-bind:initialLineItems="order.lineItems" />
+    <hr>
     <router-link class="btn btn-default" :to="{ name: 'customerDetailOrders', params: { customerId: order.customerId } }">Back</router-link>
   </div>
 </template>
 
 <script>
   import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr, formatDate } from '../../globalvars.js'
+  import LineItemIndex from '../lineitem/LineItemIndex.vue'
 
   export default {
+    components: {
+      LineItemIndex
+    },
     data() {
       return {
         order: {
