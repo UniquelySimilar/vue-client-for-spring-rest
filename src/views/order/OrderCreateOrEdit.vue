@@ -86,9 +86,9 @@
                     id: this.orderId,
                     customerId: this.customerId,
                     orderStatus: 1,
-                    orderDate: new Date(),
-                    requiredDate: null,
-                    shippedDate: null
+                    orderDate: '',
+                    requiredDate: '',
+                    shippedDate: ''
                 },
                 orderStatusList: [
                     { text: "Pending", value: "1" },
@@ -139,15 +139,18 @@
                 //console.log("updateDate payload.dtValue: " + payload.dtValue);
                 switch(payload.dtType) {
                     case 1:
-                        this.order.orderDate = new Date(payload.dtValue + this.timeZoneSuffix);
+                        this.order.orderDate = payload.dtValue;
+                        //this.order.orderDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New orderDate: " + this.order.orderDate);
                         break;
                     case 2:
-                        this.order.requiredDate = new Date(payload.dtValue + this.timeZoneSuffix);
+                        this.order.requiredDate = payload.dtValue;
+                        //this.order.requiredDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New requiredDate: " + this.order.requiredDate);
                         break;
                     case 3:
-                        this.order.shippedDate = new Date(payload.dtValue + this.timeZoneSuffix);
+                        this.order.shippedDate = payload.dtValue;
+                        //this.order.shippedDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New shippedDate: " + this.order.shippedDate);
                         break;
                     default:
@@ -160,7 +163,7 @@
             submitForm() {
                 axios({
                     method: this.orderId ? 'put' : 'post',
-                    url: orderRestUrl,
+                    url: this.orderId ? orderRestUrl + this.orderId : orderRestUrl,
                     data: JSON.stringify(this.order),
                     headers: {
                         'Authorization': 'Bearer ' + this.token
@@ -202,20 +205,7 @@
                     }
                 })
                 .then( response => {
-                    //console.log(response.data);
                     this.order = response.data;
-                    // Change dates from milliseconds to format Datepicker can use
-                    this.order.orderDate = new Date(this.order.orderDate);
-                    //console.log("Retrieved order orderDate: " + this.order.orderDate);
-                    this.order.requiredDate = new Date(this.order.requiredDate);
-                    //console.log("Retrieved order requiredDate: " + this.order.requiredDate);
-                    if (this.order.shippedDate) {   // NOT null from database/web service
-                        this.order.shippedDate = new Date(this.order.shippedDate);
-                        //console.log("Retrieved order shippedDate: " + this.order.shippedDate);
-                    }
-                    else {
-                        this.order.shippedDate = null;
-                    }
                 })
                 .catch( error => {
                     processAjaxAuthError(error, this.$router);

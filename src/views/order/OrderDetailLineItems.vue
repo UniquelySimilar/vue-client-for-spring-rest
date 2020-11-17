@@ -16,19 +16,19 @@
           <div class="col-md-4">
             <label>Order Date:</label>
           </div>
-          <div class="col-md-8">{{ formatDate(order.orderDate) }}</div>
+          <div class="col-md-8">{{ order.orderDate }}</div>
         </div>
         <div class="row">
           <div class="col-md-4">
             <label>Required Date:</label>
           </div>
-          <div class="col-md-8">{{ formatDate(order.requiredDate) }}</div>
+          <div class="col-md-8">{{ order.requiredDate }}</div>
         </div>
         <div class="row">
           <div class="col-md-4">
             <label>Shipped Date:</label>
           </div>
-          <div class="col-md-8">{{ formatDate(order.shippedDate) }}</div>
+          <div class="col-md-8">{{ order.shippedDate }}</div>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr, formatDate } from '../../globalvars.js'
+  import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr } from '../../globalvars.js'
   import LineItemIndex from '../lineitem/LineItemIndex.vue'
 
   export default {
@@ -81,8 +81,7 @@
         })
         .catch( error => processAjaxAuthError(error, this.$router) )
       },
-      getOrderStatusStr,
-      formatDate
+      getOrderStatusStr
     },
     created() {
       this.getOrder();

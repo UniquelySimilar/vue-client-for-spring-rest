@@ -25,9 +25,9 @@
                     <tbody>
                         <tr v-for="order in orders" v-bind:key="order.id">
                             <td>{{ getOrderStatusStr(order.orderStatus) }}</td>
-                            <td>{{ formatDate(order.orderDate) }}</td>
-                            <td>{{ formatDate(order.requiredDate) }}</td>
-                            <td>{{ formatDate(order.shippedDate) }}</td>
+                            <td>{{ order.orderDate }}</td>
+                            <td>{{ order.requiredDate }}</td>
+                            <td>{{ order.shippedDate }}</td>
                             <td><router-link :to="{ name: 'orderDetailLineItems', params: { orderId: order.id } }">Detail</router-link></td>
                             <td><router-link :to="{ name: 'orderEdit', params: { customerId: customerId, orderId: order.id } }">Edit</router-link></td>
                             <td><a href="#" v-on:click="deleteOrder(order.id)">Delete</a></td>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-    import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr, formatDate } from '../../globalvars.js'
+    import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr } from '../../globalvars.js'
 
     export default {
         name: 'OrderIndex',
@@ -85,8 +85,7 @@
                     processAjaxAuthError(error, this.$router);
                 });
             },
-            getOrderStatusStr,
-            formatDate
+            getOrderStatusStr
         }
     }
 

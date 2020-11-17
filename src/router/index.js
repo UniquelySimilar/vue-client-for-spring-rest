@@ -8,7 +8,7 @@ const routes = [
   // Root
   {
     path: '/',
-    redirect: '/customers'
+    redirect: '/login'
   },
   // Login
   {

@@ -22,7 +22,8 @@
                 required: true
             },
             initialDate: {
-                type: Date,
+                type: String,
+                //type: Date,
                 required: false
             }
         },
