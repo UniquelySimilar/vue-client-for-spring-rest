@@ -41,7 +41,8 @@
             <router-link :to="{ name: 'customerEdit', params: {customerId: customer.id} }">Edit</router-link>
           </td>
           <td>
-            <a href="#" v-on:click="displayDeleteModal(customer.id, customer.firstName + ' ' + customer.lastName)">Delete</a>
+            <a href="#" v-on:click="displayDeleteModal(customer.id,
+              'Delete customer ' + customer.firstName + ' ' + customer.lastName + '?')">Delete</a>
           </td>
         </tr>
       </tbody>
@@ -60,7 +61,7 @@
 
     <delete-modal
       v-if="deleteModal"
-      :deleteCustomerName="deleteCustomerName"
+      :confirmationMessage="confirmationMessage"
       @closeDeleteModalEvent="closeDeleteModal"
       @deleteRecordEvent="deleteCustomer" />
 
@@ -87,8 +88,8 @@
         filterCriteria: 'last name',
         filterCriteriaOptions: ['last name', 'state'],
         deleteModal: false,
-        deleteCustomerId: 0,
-        deleteCustomerName: ''
+        deleteId: 0,
+        confirmationMessage: ''
       }
     },
     components: {
@@ -217,9 +218,10 @@
         this.filterTerm = newFilterTerm;
         this.filterCustomers();
       },
-      displayDeleteModal(id, customerName) {
-        this.deleteCustomerId = id;
-        this.deleteCustomerName = customerName;
+      displayDeleteModal(id, message) {
+        // TODO: Pass id to modal and return id in event payload instead of storing here
+        this.deleteId = id;
+        this.confirmationMessage = message;
         this.deleteModal = true;
       },
       closeDeleteModal() {
@@ -227,7 +229,7 @@
       },
       deleteCustomer() {
         this.deleteModal = false;
-        let id = this.deleteCustomerId;
+        let id = this.deleteId;
 
         axios.delete(customerRestUrl + id, {
           headers: {
