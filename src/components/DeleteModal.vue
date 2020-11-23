@@ -30,10 +30,10 @@
     },
     methods: {
       closeModal() {
-        this.$emit('closeDeleteModalEvent');
+        this.$emit('close-delete-modal-event');
       },
       deleteRecord() {
-        this.$emit('deleteRecordEvent');
+        this.$emit('delete-record-event');
       }
     }
   }

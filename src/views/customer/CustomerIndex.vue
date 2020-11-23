@@ -62,8 +62,8 @@
     <delete-modal
       v-if="deleteModal"
       :confirmationMessage="confirmationMessage"
-      @closeDeleteModalEvent="closeDeleteModal"
-      @deleteRecordEvent="deleteCustomer" />
+      @close-delete-modal-event="closeDeleteModal"
+      @delete-record-event="deleteCustomer" />
 
   </div>
 </template>
@@ -228,7 +228,7 @@
         this.deleteModal = false;
       },
       deleteCustomer() {
-        this.deleteModal = false;
+        this.closeDeleteModal();
         let id = this.deleteId;
 
         axios.delete(customerRestUrl + id, {
