@@ -30,20 +30,30 @@
                             <td>{{ order.shippedDate }}</td>
                             <td><router-link :to="{ name: 'orderDetailLineItems', params: { orderId: order.id } }">Detail</router-link></td>
                             <td><router-link :to="{ name: 'orderEdit', params: { customerId: customerId, orderId: order.id } }">Edit</router-link></td>
-                            <td><a href="#" v-on:click="deleteOrder(order.id)">Delete</a></td>
+                            <td><a href="#" v-on:click="displayDeleteModal(order.id)">Delete</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <delete-modal
+        v-if="deleteModal"
+        :confirmationMessage="confirmationMessage"
+        @close-delete-modal-event="closeDeleteModal"
+        @delete-record-event="deleteOrder" />  
     </div>
 </template>
 
 <script>
     import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr } from '../../globalvars.js'
+    import DeleteModal from '../../components/DeleteModal.vue'
 
     export default {
         name: 'OrderIndex',
+        components: {
+            DeleteModal
+        },
         props: {
             customerId: {
                 type: Number,
@@ -56,7 +66,10 @@
         },
         data() {
             return {
-                orders: this.initialOrders
+                orders: this.initialOrders,
+                deleteModal: false,
+                deleteId: 0,
+                confirmationMessage: 'Delete order?'
             }
         },
         computed: {
@@ -65,11 +78,16 @@
             }
         },
         methods: {
-            deleteOrder(id) {
-                if (!confirm("Delete order")) {
-                    return;
-                }
-
+            displayDeleteModal(id) {
+                this.deleteId = id;
+                this.deleteModal = true;
+            },
+            closeDeleteModal() {
+                this.deleteModal = false;
+            },
+            deleteOrder() {
+                this.closeDeleteModal();
+                let id = this.deleteId;
                 axios.delete(orderRestUrl + id, {
                     headers: {
                         'Authorization': 'Bearer ' + this.token
