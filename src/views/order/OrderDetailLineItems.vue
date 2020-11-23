@@ -77,7 +77,10 @@
         .then( response => {
           this.order = response.data;
           this.order.id = parseInt(this.order.id);
-          this.order.lineItems.forEach( lineItem => lineItem.id = parseInt(lineItem.id) );
+          this.order.lineItems.forEach( lineItem => {
+            lineItem.id = parseInt(lineItem.id);
+            lineItem.unitPrice = parseFloat(lineItem.unitPrice).toFixed(2);
+           });
         })
         .catch( error => processAjaxAuthError(error, this.$router) )
       },

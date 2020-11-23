@@ -13,6 +13,8 @@
               <th>Product ID</th>
               <th>Unit Price</th>
               <th>Quantity</th>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
             </tr>
           </thead>
           <tbody>
@@ -20,6 +22,10 @@
               <td>PLACEHOLDER</td>
               <td>{{ lineItem.unitPrice }}</td>
               <td>{{ lineItem.quantity }}</td>
+              <td>
+                <router-link :to="{ name: 'lineItemEdit', params: { orderId: lineItem.orderId, lineItemId: lineItem.id } }">Edit</router-link>
+              </td>
+              <td>DELETE</td>
             </tr>
           </tbody>
         </table>

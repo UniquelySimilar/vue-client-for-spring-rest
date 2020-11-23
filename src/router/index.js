@@ -67,7 +67,7 @@ const routes = [
     props: true
   },
   {
-    path: '/lineitems/:lineitemId/edit',
+    path: '/lineitems/:lineItemId/edit',
     name: 'lineItemEdit',
     component: () => import('../views/lineitem/LineItemCreateOrEdit.vue'),
     props: true
