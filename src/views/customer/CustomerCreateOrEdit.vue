@@ -115,6 +115,7 @@
         customerRestUrl,
         axios,
         processAjaxAuthError,
+        processValidationErrors,
         getValidationError,
         stateList
     } from '../../globalvars.js';
@@ -185,26 +186,9 @@
                     this.$router.push({ name: 'customerIndex' });
                 })
                 .catch(error => {
-                    if (error.response) {
-                        // The request was made and the server responded with a status code that falls out of the range of 2xx
-                        if (error.response.status == 400) {
-                            // Validation error
-                            //console.log('validation error');
-                            this.validationErrors = error.response.data;
-                        }
-                        else if (error.response.status == 401) {
-                            console.log("401 error so redirect to login");
-                            this.$router.push("/login");
-                        }
-                        else {
-                            console.error("Response contains error code " + error.response.status);
-                        }
-                    } else if (error.request) {
-                        console.error("No response received so logging request");
-                        console.error(error.request);
-                    } else {
-                        console.error("Problem with request");
-                        console.error(error.message);
+                    this.validationErrors = processValidationErrors(error);
+                    if (this.validationErrors.length === 0) {
+                        processAjaxAuthError(error, this.$router);
                     }
                 });
             },

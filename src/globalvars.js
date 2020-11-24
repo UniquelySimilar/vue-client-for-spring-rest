@@ -39,6 +39,18 @@ const processAjaxLoginError = function(error) {
     return errorMsg;
 }
 
+const processValidationErrors = function(error) {
+    let retVal = [];
+    if (error.response) {
+        if (error.response.status == 400) {
+            // Validation error
+            //console.log('validation error');
+            retVal = error.response.data;
+        }
+    }
+    return retVal;
+}
+
 const processAjaxAuthError = function(error, router) {
     if (error.response) {
         if (error.response.status == 401) {
@@ -110,6 +122,7 @@ export {
     axios,
     processAjaxLoginError,
     processAjaxAuthError,
+    processValidationErrors,
     getOrderStatusStr,
     getValidationError,
     formatDate,
