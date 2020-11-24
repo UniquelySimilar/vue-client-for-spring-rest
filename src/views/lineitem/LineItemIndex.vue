@@ -25,21 +25,39 @@
               <td>
                 <router-link :to="{ name: 'lineItemEdit', params: { orderId: lineItem.orderId, lineItemId: lineItem.id } }">Edit</router-link>
               </td>
-              <td>DELETE</td>
+              <td>
+                <a href="" v-on:click.prevent="displayDeleteModal(lineItem.id)">Delete</a>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+
+    <delete-modal
+      v-if="deleteModal"
+      :confirmationMessage="confirmationMessage"
+      @close-delete-modal-event="closeDeleteModal"
+      @delete-record-event="deleteLineItem"
+      />
   </div>
 </template>
 
 <script>
+  import { lineItemRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+  import DeleteModal from '../../components/DeleteModal.vue';
+
   export default {
     name: 'LineItemIndex',
+    components: {
+      DeleteModal
+    },
     data() {
       return {
-        lineItems: this.initialLineItems
+        lineItems: this.initialLineItems,
+        deleteId: 0,
+        deleteModal: false,
+        confirmationMessage: 'Delete line item?'
       }
     },
     props: {
@@ -58,9 +76,32 @@
       }
     },
     methods: {
-
+      displayDeleteModal(id) {
+        this.deleteId = id;
+        this.deleteModal = true;
+      },
+      closeDeleteModal() {
+        this.deleteModal = false;
+      },
+      deleteLineItem() {
+        this.closeDeleteModal();
+        let id = this.deleteId;
+        axios.delete(lineItemRestUrl + id, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then( () => {
+          // Remove deleted lineItem from array
+          this.lineItems = this.lineItems.filter( lineItem => {
+            return lineItem.id !== id;
+          })
+        })
+        .catch( error => {
+          processAjaxAuthError(error, this.$router);
+        })
+      }
     }
-
   }
 </script>
 
