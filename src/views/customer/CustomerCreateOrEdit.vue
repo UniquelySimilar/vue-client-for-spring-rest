@@ -8,7 +8,7 @@
             <div class="form-group">
                 <label for="firstName" class="col-md-offset-2 col-md-2">First Name</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="firstName" v-model="customer.firstName">
+                    <input type="test" class="form-control" id="firstName" v-model="customer.firstName">
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -18,7 +18,7 @@
             <div class="form-group">
                 <label for="lastName" class="col-md-offset-2 col-md-2">Last Name</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="lastName" v-model="customer.lastName">
+                    <input type="text" class="form-control" id="lastName" v-model="customer.lastName">
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -28,7 +28,7 @@
             <div class="form-group">
                 <label for="street" class="col-md-offset-2 col-md-2">Street</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="street" v-model="customer.street">
+                    <input type="text" class="form-control" id="street" v-model="customer.street">
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -38,7 +38,7 @@
             <div class="form-group">
                 <label for="city" class="col-md-offset-2 col-md-2">City</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="city" v-model="customer.city">
+                    <input type="text" class="form-control" id="city" v-model="customer.city">
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -60,7 +60,7 @@
             <div class="form-group">
                 <label for="zipcode" class="col-md-offset-2 col-md-2">Zipcode</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="zipcode" v-model="customer.zipcode">
+                    <input type="text" class="form-control" id="zipcode" v-model="customer.zipcode">
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>
@@ -92,7 +92,7 @@
             <div class="form-group">
                 <label for="email" class="col-md-offset-2 col-md-2">Email</label>
                 <div class="col-md-4">
-                    <input type="input" class="form-control" id="email" v-model="customer.email">
+                    <input type="text" class="form-control" id="email" v-model="customer.email">
                 </div>
                 <div class="col-md-4 error-msg">
                     <span>*&nbsp;</span>

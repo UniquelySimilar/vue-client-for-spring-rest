@@ -5,15 +5,23 @@
     <form class="form-horizontal">
       <div class="form-group">
         <label for="unitPrice" class="col-md-offset-2 col-md-2">Unit Price</label>
-        <div class="col-md-4">
-          <input type="text" id="unitPrice" v-model="lineItem.unitPrice" >
+        <div class="col-md-2">
+          <input type="text" class="form-control" id="unitPrice" v-model="lineItem.unitPrice" >
+        </div>
+        <div class="col-md-4 error-msg">
+          <span>*&nbsp;</span>
+          <span>{{ getValidationError('unitPrice') }}</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="quantity" class="col-md-offset-2 col-md-2">Quantity</label>
-        <div class="col-md-4">
-          <input type="text" id="quantity" v-model="lineItem.quantity" >
+        <div class="col-md-2">
+          <input type="text" class="form-control" id="quantity" v-model="lineItem.quantity" >
+        </div>
+        <div class="col-md-4 error-msg">
+          <span>*&nbsp;</span>
+          <span>{{ getValidationError('quantity') }}</span>
         </div>
       </div>
 
@@ -28,7 +36,12 @@
 </template>
 
 <script>
-  import { lineItemRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+  import {
+    lineItemRestUrl,
+    axios,
+    processAjaxAuthError,
+    getValidationError
+  } from '../../globalvars.js';
 
   export default {
     name: 'LineItemCreateOrEdit',
@@ -39,7 +52,8 @@
           orderId: this.orderId,
           unitPrice: 0,
           quantity: 0
-        }
+        },
+        validationErrors: []
       }
     },
     props: {
@@ -87,8 +101,44 @@
         });
       },
       submitForm() {
-        console.log('submitForm to be implemented');
-      }
+        axios({
+          method: this.lineItemId ? 'put' : 'post',
+          url: this.lineItemId ? lineItemRestUrl + this.lineItemId : lineItemRestUrl,
+          data: JSON.stringify(this.lineItem),
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then( () => {
+          // Redirect back to order detail view
+          this.$router.push({ name: 'orderDetailLineItems', params: { orderId: this.orderId } })
+        })
+        .catch(error => {
+          // TODO: Move this to a function in 'globalvars'
+          if (error.response) {
+            // The request was made and the server responded with a status code that falls out of the range of 2xx
+            if (error.response.status == 400) {
+              // Validation error
+              //console.log('validation error');
+              this.validationErrors = error.response.data;
+            }
+            else if (error.response.status == 401) {
+              console.log("401 error so redirect to login");
+              this.$router.push("/login");
+            }
+            else {
+                console.error("Response contains error code " + error.response.status);
+            }
+          } else if (error.request) {
+            console.error("No response received so logging request");
+            console.error(error.request);
+          } else {
+            console.error("Problem with request");
+            console.error(error.message);
+          }
+      });
+      },
+      getValidationError
     },
     created() {
       if (this.lineItemId) {
@@ -99,5 +149,7 @@
 </script>
 
 <style scoped>
-  
+  label {
+    text-align: right;
+  }
 </style>
