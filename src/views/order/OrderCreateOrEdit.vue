@@ -66,6 +66,7 @@
         orderRestUrl,
         axios,
         processAjaxAuthError,
+        processValidationErrors,
         getValidationError
     } from '../../globalvars.js';
 
@@ -134,17 +135,14 @@
                 switch(payload.dtType) {
                     case 1:
                         this.order.orderDate = payload.dtValue;
-                        //this.order.orderDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New orderDate: " + this.order.orderDate);
                         break;
                     case 2:
                         this.order.requiredDate = payload.dtValue;
-                        //this.order.requiredDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New requiredDate: " + this.order.requiredDate);
                         break;
                     case 3:
                         this.order.shippedDate = payload.dtValue;
-                        //this.order.shippedDate = new Date(payload.dtValue + this.timeZoneSuffix);
                         //console.log("New shippedDate: " + this.order.shippedDate);
                         break;
                     default:
@@ -168,24 +166,9 @@
                     this.$router.push({ name: 'customerDetailOrders', params: { id: this.customerId} });
                 })
                 .catch(error => {
-                    if (error.response) {
-                        // The request was made and the server responded with a status code that falls out of the range of 2xx
-                        if (error.response.status == 400) {
-                            // Validation error
-                            this.validationErrors = error.response.data;
-                        }
-                        else if (error.response.status == 401) {
-                            console.log("401 error so redirect to login");
-                            this.$router.push("/login");
-                        }
-                        else {
-                            console.error("Response contains error code " + error.response.status);
-                        }
-                    } else if (error.request) {
-                        console.error("No response received so logging request");
-                        console.error(error.request);
-                    } else {
-                        console.error("Problem with request: " + error.message);
+                    this.validationErrors = processValidationErrors(error);
+                    if (this.validationErrors.length === 0) {
+                        processAjaxAuthError(error, this.$router);
                     }
                 });
             },
