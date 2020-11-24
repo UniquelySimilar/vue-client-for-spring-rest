@@ -78,6 +78,20 @@ const getOrderStatusStr = function(status) {
     return statusStr;
 }
 
+const getValidationError = function(fieldName) {
+    var returnValue;
+
+    var foundElement = this.validationErrors.find(function (element) {
+        return element.field === fieldName;
+    });
+
+    if (foundElement !== undefined) {
+        returnValue = foundElement.message;
+    }
+
+    return returnValue;
+}
+
 const formatDate = function(milliseconds) {
     if (!milliseconds)
         return;
@@ -97,6 +111,7 @@ export {
     processAjaxLoginError,
     processAjaxAuthError,
     getOrderStatusStr,
+    getValidationError,
     formatDate,
     stateList
 }

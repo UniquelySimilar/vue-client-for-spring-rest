@@ -62,8 +62,14 @@
 </template>
 
 <script>
-    import { orderRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
-    import Datepicker from '../../components/Datepicker.vue'
+    import {
+        orderRestUrl,
+        axios,
+        processAjaxAuthError,
+        getValidationError
+    } from '../../globalvars.js';
+
+    import Datepicker from '../../components/Datepicker.vue';
 
     export default {
         name: "OrderCreateOrEdit",
@@ -122,19 +128,7 @@
             }
         },
         methods: {
-            getValidationError(fieldName) {
-                var returnValue;
-
-                var foundElement = this.validationErrors.find(function (element) {
-                    return element.field === fieldName;
-                });
-
-                if (foundElement !== undefined) {
-                    returnValue = foundElement.message;
-                }
-
-                return returnValue;
-            },
+            getValidationError,
             updateDate(payload) {
                 //console.log("updateDate payload.dtValue: " + payload.dtValue);
                 switch(payload.dtType) {

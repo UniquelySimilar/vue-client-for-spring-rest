@@ -111,8 +111,15 @@
 </template>
 
 <script>
-    import { customerRestUrl, axios, processAjaxAuthError, stateList } from '../../globalvars.js'
-    import DigitsInput from '../../components/DigitsInput.vue'
+    import {
+        customerRestUrl,
+        axios,
+        processAjaxAuthError,
+        getValidationError,
+        stateList
+    } from '../../globalvars.js';
+
+    import DigitsInput from '../../components/DigitsInput.vue';
 
     export default {
         name: "CustomerCreateOrEdit",
@@ -163,23 +170,11 @@
             }
         },
         methods: {
-            getValidationError(fieldName) {
-                var returnValue;
-
-                var foundElement = this.validationErrors.find(function (element) {
-                    return element.field === fieldName;
-                });
-
-                if (foundElement !== undefined) {
-                    returnValue = foundElement.message;
-                }
-
-                return returnValue;
-            },
+            getValidationError,
             submitForm() {
                 axios({
                     method: this.customerId ? 'put' : 'post',
-                    url: customerRestUrl,
+                    url: this.customerId ? customerRestUrl + this.customerId : customerRestUrl,
                     data: JSON.stringify(this.customer),
                     headers: {
                         'Authorization': 'Bearer ' + this.token
