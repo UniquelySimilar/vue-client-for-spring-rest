@@ -10,7 +10,7 @@
         <table id="line-item-table" class="table table-striped table-bordered">
           <thead>
             <tr>
-              <th>Product ID</th>
+              <th>Product</th>
               <th>Unit Price</th>
               <th>Quantity</th>
               <th>&nbsp;</th>
@@ -19,7 +19,7 @@
           </thead>
           <tbody>
             <tr v-for="lineItem in lineItems" v-bind:key="lineItem.id">
-              <td>PLACEHOLDER</td>
+              <td>{{ lineItem.product.name }}</td>
               <td>{{ lineItem.unitPrice }}</td>
               <td>{{ lineItem.quantity }}</td>
               <td>
@@ -36,7 +36,7 @@
 
     <delete-modal
       v-if="deleteModal"
-      :confirmationMessage="confirmationMessage"
+      confirmationMessage="Delete line item?"
       @close-delete-modal-event="closeDeleteModal"
       @delete-record-event="deleteLineItem"
       />
@@ -56,8 +56,7 @@
       return {
         lineItems: this.initialLineItems,
         deleteId: 0,
-        deleteModal: false,
-        confirmationMessage: 'Delete line item?'
+        deleteModal: false
       }
     },
     props: {
