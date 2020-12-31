@@ -28,7 +28,7 @@
       <div class="form-group">
         <label for="product" class="col-md-offset-2 col-md-2">Product</label>
         <div class="col-md-2">
-          <input type="text" class="form-control" id="product" v-model="lineItem.product" disabled >
+          <input type="text" class="form-control" id="product" v-model="lineItem.product.name" disabled >
         </div>
         <div class="col-md-1">
           <button type="button" class="btn btn-default" @click="showProductModal">Select</button>
@@ -73,7 +73,11 @@
           id: this.lineItemId,
           orderId: this.orderId,
           unitPrice: 0,
-          quantity: 0
+          quantity: 0,
+          product: {
+            id: 0,
+            name: ''
+          }
         },
         productModal: false,
         products: [],
@@ -151,14 +155,22 @@
           }
         })
         .then( response => {
-          this.products = response.data;
+          let productsTemp = response.data;
+          // Add 'selected' property here so it will be reactive in modal
+          productsTemp.forEach( product => {
+            product.selected = false;
+          });
+
+          this.products = productsTemp;
           this.productModal = true;
         })
         .catch( error => {
           processAjaxAuthError(error, this.$router);
         })
       },
-      selectProduct() {
+      selectProduct(selectedProduct) {
+        //console.log(selectedProduct);
+        this.lineItem.product = selectedProduct;
         this.productModal = false;
       },
       getValidationError

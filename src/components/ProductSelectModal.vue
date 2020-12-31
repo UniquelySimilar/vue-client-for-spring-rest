@@ -1,12 +1,12 @@
 <template>
-<div id="modal-dialog" class="modal-dialog-container">
+<div class="modal-dialog-container">
   <div class="modal-dialog-content">
     <div class="modal-dialog-header">
       <h4>Select Product</h4>
     </div>
 
     <div class="modal-dialog-body">
-      <table class="table table-striped table-bordered">
+      <table class="table table-bordered">
         <thead>
           <tr>
             <th>NAME</th>
@@ -14,7 +14,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in currentPageProducts" :key="product.id" @click="selectRow(product.id, $event)">
+          <tr :class="{ active: product.selected }"
+            v-for="product in currentPageProducts" :key="product.id"
+            @click="selectRow(product.id, $event)" >
             <td>{{  product.name }}</td>
             <td>{{ product.productType.name }}</td>
           </tr>
@@ -32,7 +34,8 @@
     <div class="modal-dialog-footer">
       <div class="btn-wrapper">
         <button type="button" class="btn btn-primary btn-sm" @click="selectProduct">OK</button>
-        <button type="button" class="btn btn-secondary btn-sm close-btn" @click="closeModal">Cancel</button>
+        <button type="button" class="btn btn-secondary btn-sm" @click="closeModal">Cancel</button>
+        <span class="select-warning" v-if="selectWarning">Must select a product or cancel</span>
       </div>
     </div>
   </div>
@@ -48,8 +51,10 @@
     },
     data() {
       return {
+        selectedProduct: undefined,
         currentPage: 1,
         pageSize: 8,
+        selectWarning: false
       }
     },
     props: {
@@ -72,13 +77,25 @@
       closeModal() {
         this.$emit('close-product-modal-event');
       },
-      selectRow(id, event)  {
-        console.log('selected row product ID: ' + id);
-        let clickedElement = event.target;
-        console.log(clickedElement);
+      selectRow(id)  {
+        this.products.forEach( product => {
+          if (product.id === id) {
+            product.selected = true;
+            this.selectedProduct = product;
+          }
+          else {
+            product.selected = false;
+          }
+        });
+        this.selectWarning = false;
       },
       selectProduct() {
-        this.$emit('select-product-event');
+        if (!this.selectedProduct) {
+          this.selectWarning = true;
+        }
+        else {
+          this.$emit('select-product-event', this.selectedProduct);
+        }
       },
       incrementPage() {
         if (this.currentPage < this.pageCount) {
@@ -95,7 +112,7 @@
       },
       goToLastPage() {
         this.currentPage = this.pageCount;
-      },
+      }
     }
   }
 </script>
@@ -123,11 +140,11 @@
     width: 30%;
   }
 
-  .modal-dialog-footer {
-    text-align: center;
+  .btn {
+    margin-right: 1em;
   }
 
-  .close-btn {
-    margin-left: 1em;
+  .select-warning {
+    color: red;
   }
 </style>
