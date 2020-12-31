@@ -4,6 +4,7 @@ const logoutUrl = baseUrl + "/api/logout";
 const customerRestUrl = baseUrl + "/api/customers/";
 const orderRestUrl = baseUrl + "/api/orders/";
 const lineItemRestUrl = baseUrl + "/api/lineitems/";
+const productRestUrl = baseUrl + "/api/products/";
 
 import axiosApi from 'axios';
 axiosApi.defaults.headers.post['Content-Type'] = 'application/json';
@@ -119,6 +120,7 @@ export {
     customerRestUrl,
     orderRestUrl,
     lineItemRestUrl,
+    productRestUrl,
     axios,
     processAjaxLoginError,
     processAjaxAuthError,
