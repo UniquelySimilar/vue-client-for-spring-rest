@@ -33,6 +33,10 @@
         <div class="col-md-1">
           <button type="button" class="btn btn-default" @click="showProductModal">Select</button>
         </div>
+        <div class="col-md-4 error-msg">
+          <span>*&nbsp;</span>
+          <span>{{ getValidationError('product.name') }}</span>
+        </div>
       </div>
 
       <div class="form-group">
@@ -76,7 +80,9 @@
           quantity: 0,
           product: {
             id: 0,
-            name: ''
+            name: '',
+            description: '',
+            unitPrice: 0.0
           }
         },
         productModal: false,
@@ -131,7 +137,8 @@
       submitForm() {
         axios({
           method: this.lineItemId ? 'put' : 'post',
-          url: this.lineItemId ? lineItemRestUrl + this.lineItemId : lineItemRestUrl,
+          url: lineItemRestUrl,
+          //url: this.lineItemId ? lineItemRestUrl + this.lineItemId : lineItemRestUrl,
           data: JSON.stringify(this.lineItem),
           headers: {
             'Authorization': 'Bearer ' + this.token
