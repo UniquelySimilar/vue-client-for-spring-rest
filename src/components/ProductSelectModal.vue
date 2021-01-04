@@ -2,7 +2,16 @@
 <div class="modal-dialog-container">
   <div class="modal-dialog-content">
     <div class="modal-dialog-header">
-      <h4>Select Product</h4>
+      <div>
+        <span class="modal-title">Select Product</span>
+      </div>
+      <div class="type-select-container">
+        <label>Type:&nbsp;</label>
+        <select v-model="productTypeFilter">
+          <option v-for="productType in productTypes" :key="productType.id"
+            :value="productType.id">{{ productType.name }}</option>
+        </select>
+      </div>
     </div>
 
     <div class="modal-dialog-body">
@@ -45,16 +54,20 @@
 <script>
   import PaginationControl from '@/components/PaginationControl';
 
+  import { productTypeRestUrl, axios, processAjaxAuthError } from '@/globalvars.js';
+
   export default {
     components: {
       PaginationControl
     },
     data() {
       return {
+        productTypes: [],
         selectedProduct: undefined,
         currentPage: 1,
         pageSize: 8,
-        selectWarning: false
+        selectWarning: false,
+        productTypeFilter: 0
       }
     },
     props: {
@@ -64,13 +77,26 @@
       }
     },
     computed: {
+      filteredProducts() {
+        if (this.productTypeFilter === 0) {
+          return this.products;
+        }
+        else {
+          return this.products.filter( product => {
+            return product.productType.id === this.productTypeFilter;
+          });
+        }
+      },
+      token() {
+        return this.$store.state.token;
+      },
       currentPageProducts() {
         let startIndex = (this.currentPage - 1) * this.pageSize;
         let endIndex = this.currentPage * this.pageSize;
-        return this.products.slice(startIndex, endIndex);
+        return this.filteredProducts.slice(startIndex, endIndex);
       },
       pageCount() {
-        return Math.ceil(this.products.length / this.pageSize);
+        return Math.ceil(this.filteredProducts.length / this.pageSize);
       }
     },
     methods: {
@@ -112,7 +138,26 @@
       },
       goToLastPage() {
         this.currentPage = this.pageCount;
+      },
+      getProductTypes() {
+        axios.get(productTypeRestUrl, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then( response => {
+          this.productTypes = response.data;
+          // Add product type representing 'all' for filtering purposes
+          this.productTypes.unshift({id: 0, name: 'all'});
+          //console.log(this.productTypes);
+        })
+        .catch( error => {
+          processAjaxAuthError(error, this.$router);
+        })
       }
+    },
+    created() {
+      this.getProductTypes();
     }
   }
 </script>
@@ -129,6 +174,26 @@
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+  .modal-dialog-header {
+    margin: 10px 0;
+  }
+
+  .modal-title {
+    font-size: 1.4em;
+  }
+
+  .modal-dialog-header div {
+    display: inline;
+  }
+
+  .type-select-container {
+    float: right;
+  }
+
+  .type-select-container label {
+    margin-right: 0.5em;
   }
 
   .modal-dialog-content {
