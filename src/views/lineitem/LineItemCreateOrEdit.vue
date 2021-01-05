@@ -4,6 +4,20 @@
     <hr>
     <form class="form-horizontal">
       <div class="form-group">
+        <label for="product" class="col-md-offset-2 col-md-2">Product</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control" id="product" v-model="lineItem.product.name" disabled >
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-default" @click="showProductModal">Select</button>
+        </div>
+        <div class="col-md-4 error-msg">
+          <span>*&nbsp;</span>
+          <span>{{ getValidationError('product.name') }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label for="unitPrice" class="col-md-offset-2 col-md-2">Unit Price</label>
         <div class="col-md-2">
           <input type="text" class="form-control" id="unitPrice" v-model="lineItem.unitPrice" >
@@ -22,20 +36,6 @@
         <div class="col-md-4 error-msg">
           <span>*&nbsp;</span>
           <span>{{ getValidationError('quantity') }}</span>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="product" class="col-md-offset-2 col-md-2">Product</label>
-        <div class="col-md-2">
-          <input type="text" class="form-control" id="product" v-model="lineItem.product.name" disabled >
-        </div>
-        <div class="col-md-1">
-          <button type="button" class="btn btn-default" @click="showProductModal">Select</button>
-        </div>
-        <div class="col-md-4 error-msg">
-          <span>*&nbsp;</span>
-          <span>{{ getValidationError('product.name') }}</span>
         </div>
       </div>
 
@@ -176,8 +176,8 @@
         })
       },
       selectProduct(selectedProduct) {
-        //console.log(selectedProduct);
         this.lineItem.product = selectedProduct;
+        this.lineItem.unitPrice = this.lineItem.product.unitPrice;
         this.productModal = false;
       },
       getValidationError

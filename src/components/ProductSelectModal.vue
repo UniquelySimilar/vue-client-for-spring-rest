@@ -19,6 +19,7 @@
         <thead>
           <tr>
             <th>NAME</th>
+            <th>UNIT PRICE</th>
             <th>TYPE</th>
           </tr>
         </thead>
@@ -26,7 +27,8 @@
           <tr :class="{ active: product.selected }"
             v-for="product in currentPageProducts" :key="product.id"
             @click="selectRow(product.id, $event)" >
-            <td>{{  product.name }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.unitPrice }}</td>
             <td>{{ product.productType.name }}</td>
           </tr>
         </tbody>
