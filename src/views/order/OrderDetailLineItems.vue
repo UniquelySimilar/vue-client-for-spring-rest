@@ -5,30 +5,42 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <label>Status:</label>
           </div>
-          <div class="col-md-8">{{ getOrderStatusStr(order.orderStatus) }}</div>
+          <div class="col-md-7">{{ getOrderStatusStr(order.orderStatus) }}</div>
         </div>
+
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <label>Order Date:</label>
           </div>
-          <div class="col-md-8">{{ order.orderDate }}</div>
+          <div class="col-md-7">{{ order.orderDate }}</div>
         </div>
+
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <label>Required Date:</label>
           </div>
-          <div class="col-md-8">{{ order.requiredDate }}</div>
+          <div class="col-md-7">{{ order.requiredDate }}</div>
         </div>
+
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <label>Shipped Date:</label>
           </div>
-          <div class="col-md-8">{{ order.shippedDate }}</div>
+          <div class="col-md-7">{{ order.shippedDate }}</div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-5">
+            <label>Total:</label>
+          </div>
+          <div class="col-md-7">${{ orderTotal }}</div>
         </div>
       </div>
     </div>
@@ -65,6 +77,13 @@
     computed: {
       token() {
         return this.$store.state.token;
+      },
+      orderTotal() {
+        let total = this.order.lineItems
+        .map( lineItem => lineItem.unitPrice * lineItem.quantity )
+        .reduce( (acc, lineTotal) => acc + lineTotal, 0);
+
+        return total;
       }
     },
     methods: {

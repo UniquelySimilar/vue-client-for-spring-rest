@@ -13,6 +13,7 @@
               <th>Product</th>
               <th>Unit Price</th>
               <th>Quantity</th>
+              <th>Total</th>
               <th>&nbsp;</th>
               <th>&nbsp;</th>
             </tr>
@@ -20,8 +21,9 @@
           <tbody>
             <tr v-for="lineItem in lineItems" v-bind:key="lineItem.id">
               <td>{{ lineItem.product.name }}</td>
-              <td>{{ lineItem.unitPrice }}</td>
-              <td>{{ lineItem.quantity }}</td>
+              <td class="text-right">{{ lineItem.unitPrice }}</td>
+              <td class="text-right">{{ lineItem.quantity }}</td>
+              <td class="text-right">{{ lineItemTotal(lineItem.unitPrice, lineItem.quantity) }}</td>
               <td>
                 <router-link :to="{ name: 'lineItemEdit', params: { orderId: lineItem.orderId, lineItemId: lineItem.id } }">Edit</router-link>
               </td>
@@ -99,6 +101,10 @@
         .catch( error => {
           processAjaxAuthError(error, this.$router);
         })
+      },
+      lineItemTotal(unitPrice, quantity) {
+        let total = unitPrice * quantity;
+        return total.toFixed(2);
       }
     }
   }
