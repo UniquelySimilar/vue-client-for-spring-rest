@@ -1,16 +1,23 @@
 <template>
   <div class="product-index">
-    <h3>Product Index Placeholder</h3>
-
-    <table class="table">
+    <div>
+      <span class="component-heading">Product List</span>
+    </div>
+    <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <td>NAME</td>
+          <th>NAME</th>
+          <th>DESCRIPTION</th>
+          <th>UNIT PRICE</th>
+          <th>TYPE</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.unitPrice }}</td>
+          <td>{{ product.productType.name }}</td>
         </tr>
       </tbody>
     </table>
