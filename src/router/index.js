@@ -71,6 +71,12 @@ const routes = [
     name: 'lineItemEdit',
     component: () => import('../views/lineitem/LineItemCreateOrEdit.vue'),
     props: true
+  },
+  // Products
+  {
+    path: '/products',
+    name: 'productIndex',
+    component: () => import('@/views/product/ProductIndex.vue')
   }
 ]
 

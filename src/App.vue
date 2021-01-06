@@ -1,12 +1,37 @@
 <template>
-  <div id="app" class="container-fluid">
-    <div class="row">
-      <header>
-        <span>Customer Manager Client Application for Spring REST Service</span>
-        <button class="btn btn-default pull-right btn-sm" v-on:click="logout()">Log Out</button>
-      </header>
+  <div id="app">
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">&nbsp;</a>
+        </div>
+    
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li :class="{ active: activeLink === 'customer' }">
+              <a href="#" @click.prevent="setActiveLinkThenNavigate('customer')">Customers</a>
+            </li>
+            <li :class="{ active: activeLink === 'product' }">
+              <a href="#" @click.prevent="setActiveLinkThenNavigate('product')">Products</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" @click.prevent="logout">Logout</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <div class="container-fluid">
+      <router-view/>
     </div>
-    <router-view/>
   </div>
 </template>
 
@@ -15,12 +40,31 @@
 
   export default {
     name: 'App',
+    data() {
+      return {
+        activeLink: 'customer'
+      }
+    },
     computed: {
       token() {
         return this.$store.state.token;
       }
     },
     methods: {
+      setActiveLinkThenNavigate(link) {
+        // Avoid redundant navigation
+        if (this.activeLink === link) {
+          return;
+        }
+        
+        this.activeLink = link;
+        // Set customer as default since only two link options
+        let routePushArg = { name: 'customerIndex' };
+        if (link === 'product') {
+          routePushArg.name = 'productIndex';
+        }
+        this.$router.push(routePushArg);
+      },
       logout() {
         axios.put(logoutUrl, {}, {
           headers: {
@@ -39,12 +83,6 @@
 </script>
 
 <style>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
   header {
     background-color: lightgrey;
     font-size: 1.5em;

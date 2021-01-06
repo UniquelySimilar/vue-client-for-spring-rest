@@ -1,9 +1,5 @@
 <template>
     <div id="login">
-        <div>
-            <span class="component-heading">Login</span>
-        </div>
-        <hr>
         <form class="form-horizontal">
             <div class="form-group">
                 <label for="username" class="col-md-offset-3 col-md-2 align-right">User Name</label>
