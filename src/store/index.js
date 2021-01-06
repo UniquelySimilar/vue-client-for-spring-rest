@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        token: ''
+        token: '',
+        loginDisplayed: true
     },
     mutations: {
         updateToken(state, payload) {
             state.token = payload.token;
+        },
+        setLoginDisplayed(state, login) {
+            state.loginDisplayed = login;
         }
     }
 });

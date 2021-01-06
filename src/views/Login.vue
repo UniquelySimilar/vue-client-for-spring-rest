@@ -47,6 +47,7 @@
                 .then(response => {
                     // Commit the token to the store
                     this.$store.commit('updateToken', { token: response.data.message });
+                    this.$store.commit('setLoginDisplayed', false);
                     // Clear error message
                     this.errorMsg = '';
                     // Redirect to customer index view

@@ -39,6 +39,8 @@
         })
         .then( response => this.products = response.data )
         .catch( error => processAjaxAuthError(error, this.$router) );
+
+        console.log(this.products);
       }
     },
     created() {
