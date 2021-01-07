@@ -7,7 +7,7 @@
       </div>
       <div class="type-select-container">
         <label>Type:&nbsp;</label>
-        <select v-model="productTypeFilter">
+        <select v-model="productTypeFilter" v-on:change="filterProducts">
           <option v-for="productType in productTypes" :key="productType.id"
             :value="productType.id">{{ productType.name }}</option>
         </select>
@@ -64,6 +64,7 @@
     },
     data() {
       return {
+        filteredProducts: this.products,
         productTypes: [],
         selectedProduct: undefined,
         currentPage: 1,
@@ -79,16 +80,6 @@
       }
     },
     computed: {
-      filteredProducts() {
-        if (this.productTypeFilter === 0) {
-          return this.products;
-        }
-        else {
-          return this.products.filter( product => {
-            return product.productType.id === this.productTypeFilter;
-          });
-        }
-      },
       token() {
         return this.$store.state.token;
       },
@@ -102,6 +93,19 @@
       }
     },
     methods: {
+      // Using a method instead of a computed property so I can update currentPage
+      filterProducts() {
+        if (this.productTypeFilter === 0) {
+          this.filteredProducts = this.products;
+        }
+        else {
+          this.filteredProducts = this.products.filter( product => {
+            return product.productType.id === this.productTypeFilter;
+          });
+        }
+
+        this.currentPage = 1;
+      },
       closeModal() {
         this.$emit('close-product-modal-event');
       },
