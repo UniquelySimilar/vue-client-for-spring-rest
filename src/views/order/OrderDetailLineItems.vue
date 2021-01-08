@@ -79,11 +79,12 @@
         return this.$store.state.token;
       },
       orderTotal() {
+        // TODO: Research decimal math in javascript
         let total = this.order.lineItems
         .map( lineItem => lineItem.unitPrice * lineItem.quantity )
         .reduce( (acc, lineTotal) => acc + lineTotal, 0);
 
-        return total;
+        return total.toFixed(2);
       }
     },
     methods: {
