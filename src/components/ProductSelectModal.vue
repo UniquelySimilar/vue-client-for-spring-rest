@@ -6,11 +6,7 @@
         <span class="modal-title">Select Product</span>
       </div>
       <div class="type-select-container">
-        <label>Type:&nbsp;</label>
-        <select v-model="productTypeFilter" v-on:change="filterProducts">
-          <option v-for="productType in productTypes" :key="productType.id"
-            :value="productType.id">{{ productType.name }}</option>
-        </select>
+        <product-type-filter :productTypes="productTypes" @product-type-filter-change="filterProductsByType" />
       </div>
     </div>
 
@@ -46,7 +42,7 @@
       <div class="btn-wrapper">
         <button type="button" class="btn btn-primary btn-sm" @click="selectProduct">OK</button>
         <button type="button" class="btn btn-secondary btn-sm" @click="closeModal">Cancel</button>
-        <span class="select-warning" v-if="selectWarning">Must select a product or cancel</span>
+        <span class="warning-message" v-if="warningMessage">{{ warningMessage }}</span>
       </div>
     </div>
   </div>
@@ -55,12 +51,14 @@
 
 <script>
   import PaginationControl from '@/components/PaginationControl';
+  import ProductTypeFilter from '@/components/ProductTypeFilter';
 
   import { productTypeRestUrl, axios, processAjaxAuthError } from '@/globalvars.js';
 
   export default {
     components: {
-      PaginationControl
+      PaginationControl,
+      ProductTypeFilter
     },
     data() {
       return {
@@ -69,8 +67,7 @@
         selectedProduct: undefined,
         currentPage: 1,
         pageSize: 8,
-        selectWarning: false,
-        productTypeFilter: 0
+        warningMessage: null
       }
     },
     props: {
@@ -94,13 +91,13 @@
     },
     methods: {
       // Using a method instead of a computed property so I can update currentPage
-      filterProducts() {
-        if (this.productTypeFilter === 0) {
+      filterProductsByType(filterValue) {
+        if (filterValue === 0) {
           this.filteredProducts = this.products;
         }
         else {
           this.filteredProducts = this.products.filter( product => {
-            return product.productType.id === this.productTypeFilter;
+            return product.productType.id === filterValue;
           });
         }
 
@@ -119,11 +116,11 @@
             product.selected = false;
           }
         });
-        this.selectWarning = false;
+        this.warningMessage = null;
       },
       selectProduct() {
         if (!this.selectedProduct) {
-          this.selectWarning = true;
+          this.warningMessage = 'Must select a product or cancel';
         }
         else {
           this.$emit('select-product-event', this.selectedProduct);
@@ -198,10 +195,6 @@
     float: right;
   }
 
-  .type-select-container label {
-    margin-right: 0.5em;
-  }
-
   .modal-dialog-content {
     background-color: #fefefe;
     margin: 5% auto;
@@ -215,7 +208,7 @@
     margin-right: 1em;
   }
 
-  .select-warning {
+  .warning-message {
     color: red;
   }
 </style>
