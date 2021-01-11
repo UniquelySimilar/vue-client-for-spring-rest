@@ -4,7 +4,7 @@
       <span class="component-heading">Product List</span>
     </div>
     <div class="product-type-filter-container">
-      <!-- product-type-filter /-->
+      <product-type-filter :productTypes="productTypes" @product-type-filter-change="filterProductsByType" />
     </div>
     <table class="table table-striped table-bordered">
       <thead>
@@ -13,6 +13,8 @@
           <th>DESCRIPTION</th>
           <th>UNIT PRICE</th>
           <th>TYPE</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +23,8 @@
           <td>{{ product.description }}</td>
           <td>{{ product.unitPrice }}</td>
           <td>{{ product.productType.name }}</td>
+          <td>EDIT</td>
+          <td>DELETE</td>
         </tr>
       </tbody>
     </table>
@@ -36,18 +40,19 @@
 
 <script>
   import PaginationControl from '@/components/PaginationControl'
-  //import ProductTypeFilter from '@/components/ProductTypeFilter'
+  import ProductTypeFilter from '@/components/ProductTypeFilter'
 
-  import { productRestUrl, axios, processAjaxAuthError } from '@/globalvars.js'
+  import { productRestUrl, productTypeRestUrl, axios, processAjaxAuthError } from '@/globalvars.js'
   export default {
     components: {
-      PaginationControl
-      //ProductTypeFilter
+      PaginationControl,
+      ProductTypeFilter
     },
     data() {
       return {
         products: [],
-        //filteredProducts: [],
+        productTypes: [],
+        filteredProducts: [],
         pageSize: 10,
         currentPage: 1
       }
@@ -64,22 +69,45 @@
       pageCount() {
         return Math.ceil(this.filteredProducts.length / this.pageSize);
       },
-      // TEMPORARY: Until ProductTypeFilter added
-      filteredProducts() {
-        return this.products;
-      }
     },
     methods: {
-      // TODO: Create 'getProductTypes()'
-      // See https://github.com/axios/axios - Performing multiple concurrent requests 
       getProducts() {
-        axios.get(productRestUrl, {
+        return axios.get(productRestUrl, {
           headers: {
             'Authorization': 'Bearer ' + this.token
           }
+        });
+      },
+      getProductTypes() {
+        return axios.get(productTypeRestUrl, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        });
+      },
+      getData() {
+        Promise.all([this.getProducts(), this.getProductTypes()])
+        .then( results => {
+          this.products = results[0].data;
+          this.filteredProducts = this.products;
+
+          this.productTypes = results[1].data;
+          // Add product type representing 'all' for filtering purposes
+          this.productTypes.unshift({id: 0, name: 'all'});
         })
-        .then( response => this.products = response.data )
         .catch( error => processAjaxAuthError(error, this.$router) );
+      },
+      filterProductsByType(filterValue) {
+        if (filterValue === 0) {
+          this.filteredProducts = this.products;
+        }
+        else {
+          this.filteredProducts = this.products.filter( product => {
+            return product.productType.id === filterValue;
+          });
+        }
+
+        this.currentPage = 1;
       },
       goToFirstPage() {
         this.currentPage = 1;
@@ -99,7 +127,7 @@
       }
     },
     created() {
-      this.getProducts();
+      this.getData();
     }
   }
 </script>
