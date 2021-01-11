@@ -1,11 +1,20 @@
 <template>
   <div class="product-index">
-    <div>
-      <span class="component-heading">Product List</span>
+    <div class="row">
+      <div class="col-md-6">
+        <span class="component-heading">Product List</span>
+      </div>
+      <div class="col-md-6">
+        <product-type-filter class="pull-right" :productTypes="productTypes" @product-type-filter-change="filterProductsByType" />
+      </div>
     </div>
-    <div class="product-type-filter-container">
-      <product-type-filter :productTypes="productTypes" @product-type-filter-change="filterProductsByType" />
+
+    <div class="row">
+      <div class="col-md-12" v-if="errorMessages.length > 0">
+        <span class="error-msg">{{ getErrorMessage('warning', errorMessages) }}</span>
+      </div>
     </div>
+
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -24,7 +33,9 @@
           <td>{{ product.unitPrice }}</td>
           <td>{{ product.productType.name }}</td>
           <td>EDIT</td>
-          <td>DELETE</td>
+          <td>
+            <a href="#" @click.prevent="showDeleteModal(product.id)">DELETE</a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -35,18 +46,34 @@
       @decrementPageEvt="decrementPage"
       @goToLastPageEvt="goToLastPage"
       />
+
+    <delete-modal
+      v-if="displayDeleteModal"
+      confirmationMessage="Delete this product?"
+      @close-delete-modal-event="hideDeleteModal"
+      @delete-record-event="deleteProduct" />
   </div>
 </template>
 
 <script>
   import PaginationControl from '@/components/PaginationControl'
   import ProductTypeFilter from '@/components/ProductTypeFilter'
+  import DeleteModal from '@/components/DeleteModal'
 
-  import { productRestUrl, productTypeRestUrl, axios, processAjaxAuthError } from '@/globalvars.js'
+  import {
+    productRestUrl,
+    productTypeRestUrl,
+    axios,
+    processValidationErrors,
+    getErrorMessage,
+    processAjaxAuthError
+  } from '@/globalvars.js'
+
   export default {
     components: {
       PaginationControl,
-      ProductTypeFilter
+      ProductTypeFilter,
+      DeleteModal
     },
     data() {
       return {
@@ -54,7 +81,10 @@
         productTypes: [],
         filteredProducts: [],
         pageSize: 10,
-        currentPage: 1
+        currentPage: 1,
+        deleteId: 0,
+        displayDeleteModal: false,
+        errorMessages: []
       }
     },
     computed: {
@@ -124,7 +154,43 @@
       },
       goToLastPage() {
         this.currentPage = this.pageCount;
-      }
+      },
+      showDeleteModal(id) {
+        this.deleteId = id;
+        this.displayDeleteModal = true;
+      },
+      hideDeleteModal() {
+        this.displayDeleteModal = false
+      },
+      deleteProduct() {
+        this.hideDeleteModal();
+        let id = this.deleteId;
+        axios.delete(productRestUrl + id, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then( () => {
+          // Remove deleted product from array
+          this.products = this.products.filter( product => {
+            return product.id !== id;
+          });
+          // Remove deleted product from filtered products in case deletion done while products filtered
+          this.filteredProducts = this.filteredProducts.filter( product => {
+            return product.id !== id;
+          });
+
+          this.currentPage = 1;
+          this.errorMessages = [];
+        })
+        .catch( error => {
+          this.errorMessages = processValidationErrors(error);
+          if (this.errorMessages.length == 0) {
+            processAjaxAuthError(error, this.$router);
+          }
+        });
+      },
+      getErrorMessage
     },
     created() {
       this.getData();

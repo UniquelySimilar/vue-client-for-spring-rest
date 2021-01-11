@@ -106,6 +106,20 @@ const getValidationError = function(fieldName) {
     return returnValue;
 }
 
+const getErrorMessage = function(fieldName, errors) {
+    var returnValue;
+
+    var foundElement = errors.find(function (element) {
+        return element.field === fieldName;
+    });
+
+    if (foundElement !== undefined) {
+        returnValue = foundElement.message;
+    }
+
+    return returnValue;
+}
+
 const formatDate = function(milliseconds) {
     if (!milliseconds)
         return;
@@ -129,6 +143,7 @@ export {
     processValidationErrors,
     getOrderStatusStr,
     getValidationError,
+    getErrorMessage,
     formatDate,
     stateList
 }
