@@ -10,7 +10,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Order Manager</a>
+          <span class="brand">Order Manager</span>
         </div>
     
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -38,17 +38,24 @@
     <div class="container-fluid">
       <router-view/>
     </div>
+
+    <about-modal v-if="displayAboutModal" @close-about-modal-event="hideAboutModal" />
   </div>
 </template>
 
 <script>
-  import { logoutUrl, axios } from './globalvars.js'
+  import { logoutUrl, axios } from '@/globalvars.js'
+  import AboutModal from '@/components/AboutModal'
 
   export default {
     name: 'App',
+    components: {
+      AboutModal
+    },
     data() {
       return {
-        activeLink: 'customer'
+        activeLink: 'customer',
+        displayAboutModal: false
       }
     },
     computed: {
@@ -75,7 +82,10 @@
         this.$router.push(routePushArg);
       },
       showAboutModal() {
-        alert('TODO: Implement About modal');
+        this.displayAboutModal = true;
+      },
+      hideAboutModal() {
+        this.displayAboutModal = false;
       },
       logout() {
         axios.put(logoutUrl, {}, {
@@ -96,6 +106,15 @@
 </script>
 
 <style>
+  .brand {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+    color: #777;
+  }
+
   header {
     background-color: lightgrey;
     font-size: 1.5em;
