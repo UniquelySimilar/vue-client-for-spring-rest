@@ -48,8 +48,13 @@
                     // Commit the token to the store
                     this.$store.commit('updateToken', { token: response.data.message });
                     this.$store.commit('setLoginDisplayed', false);
+
                     // Clear error message
                     this.errorMsg = '';
+
+                    // Initialize Vuex store product types
+                    this.$store.dispatch('getProductTypes');
+                    
                     // Redirect to customer index view
                     this.$router.push("/customers")
                 })

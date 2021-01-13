@@ -62,7 +62,6 @@
 
   import {
     productRestUrl,
-    productTypeRestUrl,
     axios,
     processValidationErrors,
     getErrorMessage,
@@ -102,30 +101,19 @@
     },
     methods: {
       getProducts() {
-        return axios.get(productRestUrl, {
+        axios.get(productRestUrl, {
           headers: {
             'Authorization': 'Bearer ' + this.token
           }
-        });
-      },
-      getProductTypes() {
-        return axios.get(productTypeRestUrl, {
-          headers: {
-            'Authorization': 'Bearer ' + this.token
-          }
-        });
-      },
-      getData() {
-        Promise.all([this.getProducts(), this.getProductTypes()])
-        .then( results => {
-          this.products = results[0].data;
+        })
+        .then( response => {
+          this.products = response.data;
           this.filteredProducts = this.products;
-
-          this.productTypes = results[1].data;
-          // Add product type representing 'all' for filtering purposes
-          this.productTypes.unshift({id: 0, name: 'all'});
         })
         .catch( error => processAjaxAuthError(error, this.$router) );
+      },
+      getProductTypesFromStore() {
+        this.productTypes = this.$store.state.productTypes;
       },
       filterProductsByType(filterValue) {
         if (filterValue === 0) {
@@ -193,7 +181,8 @@
       getErrorMessage
     },
     created() {
-      this.getData();
+      this.getProducts();
+      this.getProductTypesFromStore();
     }
   }
 </script>

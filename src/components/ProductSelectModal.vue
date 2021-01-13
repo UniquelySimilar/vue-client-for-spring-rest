@@ -53,8 +53,6 @@
   import PaginationControl from '@/components/PaginationControl';
   import ProductTypeFilter from '@/components/ProductTypeFilter';
 
-  import { productTypeRestUrl, axios, processAjaxAuthError } from '@/globalvars.js';
-
   export default {
     components: {
       PaginationControl,
@@ -142,25 +140,12 @@
       goToLastPage() {
         this.currentPage = this.pageCount;
       },
-      getProductTypes() {
-        axios.get(productTypeRestUrl, {
-          headers: {
-            'Authorization': 'Bearer ' + this.token
-          }
-        })
-        .then( response => {
-          this.productTypes = response.data;
-          // Add product type representing 'all' for filtering purposes
-          this.productTypes.unshift({id: 0, name: 'all'});
-          //console.log(this.productTypes);
-        })
-        .catch( error => {
-          processAjaxAuthError(error, this.$router);
-        })
+      getProductTypesFromStore() {
+        this.productTypes = this.$store.state.productTypes;
       }
     },
     created() {
-      this.getProductTypes();
+      this.getProductTypesFromStore();
     }
   }
 </script>
