@@ -2,7 +2,7 @@
   <div class="product-type-filter">
     <label>Type:</label>
     <select v-model="filterValue" v-on:change="filterValueChanged">
-      <option v-for="productType in productTypes" :key="productType.id" :value="productType.id">{{ productType.name }}
+      <option v-for="productType in productTypesFilter" :key="productType.id" :value="productType.id">{{ productType.name }}
       </option>
     </select>
 
@@ -17,7 +17,7 @@
       }
     },
     props: {
-      productTypes: {
+      productTypesFilter: {
         type: Array,
         required: true
       }

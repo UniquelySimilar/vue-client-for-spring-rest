@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     token: '',
     loginDisplayed: true,
-    productTypes: []
+    productTypes: [],
+    productTypesFilter: []
   },
   mutations: {
     updateToken(state, payload) {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     setProductTypes(state, types) {
       state.productTypes = types;
+    },
+    setProductTypesFilter(state, types) {
+      state.productTypesFilter = types;
     }
   },
   actions: {
@@ -30,10 +34,12 @@ export default new Vuex.Store({
         }
       })
       .then( response => {
-        let productTypes = response.data;
-        // Add product type representing 'all' for filtering purposes
-        productTypes.unshift({id: 0, name: 'all'});
         context.commit('setProductTypes', response.data);
+
+        // Add product type representing 'all' for filtering purposes
+        let typesFilter = [...response.data];
+        typesFilter.unshift({id: 0, name: 'all'});
+        context.commit('setProductTypesFilter', typesFilter);
       })
       .catch( error => console.log(error) );
     }

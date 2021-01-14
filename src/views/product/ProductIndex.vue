@@ -1,19 +1,16 @@
 <template>
   <div class="product-index">
-    <div class="row">
-      <div class="col-md-6">
-        <span class="component-heading">Product List</span>
-      </div>
-      <div class="col-md-6">
-        <product-type-filter class="pull-right" :productTypes="productTypes" @product-type-filter-change="filterProductsByType" />
+    <div>
+      <span class="component-heading">Product List</span>
+      <router-link class="btn btn-default" :to="{ name: 'productCreate' }">Create Product</router-link>
+      <div style="float: right;">
+        <product-type-filter class="pull-right" :productTypesFilter="productTypesFilter" @product-type-filter-change="filterProductsByType" />
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12" v-if="errorMessages.length > 0">
-        <span class="error-msg">{{ getErrorMessage('warning', errorMessages) }}</span>
-      </div>
-    </div>
+    <span v-if="errorMessages.length > 0" class="error-msg">{{ getErrorMessage('warning', errorMessages) }}</span>
+    <!-- Empty line when no error message. See CSS below. -->
+    <span v-else class="error-msg"></span>
 
     <table class="table table-striped table-bordered">
       <thead>
@@ -77,7 +74,7 @@
     data() {
       return {
         products: [],
-        productTypes: [],
+        productTypesFilter: [],
         filteredProducts: [],
         pageSize: 10,
         currentPage: 1,
@@ -112,8 +109,8 @@
         })
         .catch( error => processAjaxAuthError(error, this.$router) );
       },
-      getProductTypesFromStore() {
-        this.productTypes = this.$store.state.productTypes;
+      getProductTypesFilterFromStore() {
+        this.productTypesFilter = this.$store.state.productTypesFilter;
       },
       filterProductsByType(filterValue) {
         if (filterValue === 0) {
@@ -182,7 +179,7 @@
     },
     created() {
       this.getProducts();
-      this.getProductTypesFromStore();
+      this.getProductTypesFilterFromStore();
     }
   }
 </script>
@@ -190,6 +187,14 @@
 <style scoped>
   .product-type-filter-container {
     float: right;
+  }
+
+  span.error-msg {
+    display: block;
+  }
+
+  span.error-msg:empty:before {
+    content: "\200b"; /* unicode zero width space character */
   }
 
 </style>

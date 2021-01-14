@@ -6,7 +6,7 @@
         <span class="modal-title">Select Product</span>
       </div>
       <div class="type-select-container">
-        <product-type-filter :productTypes="productTypes" @product-type-filter-change="filterProductsByType" />
+        <product-type-filter :productTypesFilter="productTypesFilter" @product-type-filter-change="filterProductsByType" />
       </div>
     </div>
 
@@ -61,7 +61,7 @@
     data() {
       return {
         filteredProducts: this.products,
-        productTypes: [],
+        productTypesFilter: [],
         selectedProduct: undefined,
         currentPage: 1,
         pageSize: 8,
@@ -140,12 +140,12 @@
       goToLastPage() {
         this.currentPage = this.pageCount;
       },
-      getProductTypesFromStore() {
-        this.productTypes = this.$store.state.productTypes;
+      getProductTypesFilterFromStore() {
+        this.productTypesFilter = this.$store.state.productTypesFilter;
       }
     },
     created() {
-      this.getProductTypesFromStore();
+      this.getProductTypesFilterFromStore();
     }
   }
 </script>
