@@ -29,9 +29,11 @@
           <td>{{ product.description }}</td>
           <td>{{ product.unitPrice }}</td>
           <td>{{ product.productType.name }}</td>
-          <td>EDIT</td>
           <td>
-            <a href="#" @click.prevent="showDeleteModal(product.id)">DELETE</a>
+            <router-link :to="{ name: 'productEdit', params: { productId: product.id } }">Edit</router-link>
+          </td>
+          <td>
+            <a href="#" @click.prevent="showDeleteModal(product.id)">Delete</a>
           </td>
         </tr>
       </tbody>

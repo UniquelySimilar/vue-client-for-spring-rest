@@ -4,7 +4,7 @@
             <div class="form-group">
                 <label for="username" class="col-md-offset-3 col-md-2 align-right">User Name</label>
                 <div class="col-md-3">
-                    <input type="input" class="form-control" id="username" v-model="username">
+                    <input type="input" ref="username" class="form-control" id="username" v-model="username">
                 </div>
             </div>
             <div class="form-group">
@@ -67,6 +67,9 @@
             token() {
                 return this.$store.state.token;
             }
+        },
+        mounted() {
+            this.$refs.username.focus();
         }
     }
 

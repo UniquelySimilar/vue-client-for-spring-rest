@@ -117,8 +117,14 @@
       }
     },
     methods: {
-      logProductTypeId() {
-        console.log('logProductTypeId: ' + this.product.productType.id)
+      getProduct() {
+        axios.get(productRestUrl + this.productId, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then( response => this.product = response.data )
+        .catch( error => processAjaxAuthError(error, this.$router) );
       },
       saveOrUpdate() {
         axios({
@@ -141,8 +147,12 @@
         });
       },
       getValidationError
+    },
+    created() {
+      if (this.productId) {
+        this.getProduct();
+      }
     }
-    
   }
 </script>
 
