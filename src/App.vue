@@ -96,6 +96,7 @@
         .then()
         .catch( error => console.error(error))
         .finally( () => {
+          this.activeLink = 'customer';
           this.$store.commit('updateToken', { token: '' });
           this.$store.commit('setLoginDisplayed', true);
           this.$router.push("/login");
