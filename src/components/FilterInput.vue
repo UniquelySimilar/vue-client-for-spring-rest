@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span>Filter by </span>
+  <div class="filter-input">
+    <label>Filter by </label>
     <select v-model="filterCriteria" v-on:change="updateCriteria()" style="margin-right: 0.5em;">
       <option v-for="criteria in criteriaOptions" v-bind:key="criteria">{{ criteria }}</option>
     </select>
@@ -45,5 +45,7 @@
 </script>
 
 <style scoped>
-
+  .filter-input label {
+    margin-right: 0.5em;
+  }
 </style>

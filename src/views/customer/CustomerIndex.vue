@@ -219,7 +219,6 @@
         this.filterCustomers();
       },
       displayDeleteModal(id, message) {
-        // TODO: Pass id to modal and return id in event payload instead of storing here
         this.deleteId = id;
         this.confirmationMessage = message;
         this.deleteModal = true;

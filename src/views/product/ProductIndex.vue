@@ -3,8 +3,13 @@
     <div>
       <span class="component-heading">Product List</span>
       <router-link class="btn btn-default" :to="{ name: 'productCreate' }">Create Product</router-link>
-      <div style="float: right;">
-        <product-type-filter class="pull-right" :productTypesFilter="productTypesFilter" @product-type-filter-change="filterProductsByType" />
+      <div class="pull-right">
+        <filter-input
+          :criteriaOptions="filterInputCriteriaOptions"
+          :initialCriteria="filterInputCriteria"
+          @update-criteria="updatefilterInputCriteria"
+          @update-filter-term="updateFilterInputTerm" />
+        <product-type-filter :productTypesFilter="productTypesFilter" @product-type-filter-change="filterProductsByType" />
       </div>
     </div>
 
@@ -58,6 +63,7 @@
   import PaginationControl from '@/components/PaginationControl'
   import ProductTypeFilter from '@/components/ProductTypeFilter'
   import DeleteModal from '@/components/DeleteModal'
+  import FilterInput from '@/components/FilterInput'
 
   import {
     productRestUrl,
@@ -71,13 +77,17 @@
     components: {
       PaginationControl,
       ProductTypeFilter,
-      DeleteModal
+      DeleteModal,
+      FilterInput
     },
     data() {
       return {
         products: [],
         productTypesFilter: [],
         filteredProducts: [],
+        filterInputTerm: '',
+        filterInputCriteria: 'name',
+        filterInputCriteriaOptions: ['name', 'description'],
         pageSize: 10,
         currentPage: 1,
         deleteId: 0,
@@ -114,6 +124,7 @@
       getProductTypesFilterFromStore() {
         this.productTypesFilter = this.$store.state.productTypesFilter;
       },
+      // TODO: Combine 'filterProductsByType' and 'filterProductsByInputTerm'
       filterProductsByType(filterValue) {
         if (filterValue === 0) {
           this.filteredProducts = this.products;
@@ -125,6 +136,24 @@
         }
 
         this.currentPage = 1;
+      },
+      filterProductsByInputTerm() {
+        if (this.filterInputTerm.length < 1) {
+          // Reset in case hitting backspace
+          this.filteredProducts = [...this.products];
+          this.currentPage = 1;
+          return;
+        }
+
+        this.filteredProducts = this.filterProductArray();
+
+        this.currentPage = 1;
+      },
+      filterProductArray() {
+        let propertyName = this.filterInputCriteria;
+        return this.products.filter( product => {
+          return product[propertyName].toLowerCase().indexOf(this.filterInputTerm.toLowerCase()) !== -1;
+        })
       },
       goToFirstPage() {
         this.currentPage = 1;
@@ -177,7 +206,14 @@
           }
         });
       },
-      getErrorMessage
+      getErrorMessage,
+      updatefilterInputCriteria(criteria) {
+        this.filterInputCriteria = criteria;
+      },
+      updateFilterInputTerm(term) {
+        this.filterInputTerm = term;
+        this.filterProductsByInputTerm();
+      }
     },
     created() {
       this.getProducts();
@@ -197,6 +233,10 @@
 
   span.error-msg:empty:before {
     content: "\200b"; /* unicode zero width space character */
+  }
+
+  .filter-input, .product-type-filter {
+    display: inline-block;
   }
 
 </style>
