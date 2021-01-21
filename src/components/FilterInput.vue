@@ -20,12 +20,24 @@
       initialCriteria: {
         type: String,
         required: true
+      },
+      filterTermFromParent: {
+        type: String,
+        required: true
       }
     },
     data() {
       return {
-        filterTerm: '',
+        filterTerm: this.filterTermFromParent,
         filterCriteria: this.initialCriteria
+      }
+    },
+    watch: {
+      filterTermFromParent(newValue) {
+        // Parent reset filter term
+        if (newValue.length === 0) {
+          this.filterTerm = '';
+        }
       }
     },
     methods: {

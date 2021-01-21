@@ -7,6 +7,7 @@
         <filter-input
           :criteriaOptions="filterInputCriteriaOptions"
           :initialCriteria="filterInputCriteria"
+          :filterTermFromParent="filterInputTerm"
           @update-criteria="updatefilterInputCriteria"
           @update-filter-term="updateFilterInputTerm" />
         <product-type-filter :productTypesFilter="productTypesFilter" @product-type-filter-change="filterProductsByType" />
@@ -84,6 +85,7 @@
       return {
         products: [],
         productTypesFilter: [],
+        productsFilteredByType: [],
         filteredProducts: [],
         filterInputTerm: '',
         filterInputCriteria: 'name',
@@ -118,13 +120,20 @@
         .then( response => {
           this.products = response.data;
           this.filteredProducts = this.products;
+          this.productsFilteredByType = [...this.products];
         })
         .catch( error => processAjaxAuthError(error, this.$router) );
       },
       getProductTypesFilterFromStore() {
         this.productTypesFilter = this.$store.state.productTypesFilter;
       },
-      // TODO: Combine 'filterProductsByType' and 'filterProductsByInputTerm'
+      updatefilterInputCriteria(criteria) {
+        this.filterInputCriteria = criteria;
+      },
+      updateFilterInputTerm(term) {
+        this.filterInputTerm = term;
+        this.filterProductsByInputTerm();
+      },
       filterProductsByType(filterValue) {
         if (filterValue === 0) {
           this.filteredProducts = this.products;
@@ -135,23 +144,26 @@
           });
         }
 
+        this.productsFilteredByType = [...this.filteredProducts];
+        // When type is changed, clear filter term to trigger watch in FilterInput component
+        this.filterInputTerm = '';
+        // Reset current pagination
         this.currentPage = 1;
       },
       filterProductsByInputTerm() {
         if (this.filterInputTerm.length < 1) {
           // Reset in case hitting backspace
-          this.filteredProducts = [...this.products];
+          this.filteredProducts = [...this.productsFilteredByType];
           this.currentPage = 1;
           return;
         }
 
         this.filteredProducts = this.filterProductArray();
-
         this.currentPage = 1;
       },
       filterProductArray() {
         let propertyName = this.filterInputCriteria;
-        return this.products.filter( product => {
+        return this.productsFilteredByType.filter( product => {
           return product[propertyName].toLowerCase().indexOf(this.filterInputTerm.toLowerCase()) !== -1;
         })
       },
@@ -206,14 +218,7 @@
           }
         });
       },
-      getErrorMessage,
-      updatefilterInputCriteria(criteria) {
-        this.filterInputCriteria = criteria;
-      },
-      updateFilterInputTerm(term) {
-        this.filterInputTerm = term;
-        this.filterProductsByInputTerm();
-      }
+      getErrorMessage
     },
     created() {
       this.getProducts();

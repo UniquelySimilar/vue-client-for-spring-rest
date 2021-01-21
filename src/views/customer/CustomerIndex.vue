@@ -6,10 +6,11 @@
       <button type="button" class="btn btn-default btn-margin-left" v-on:click="getCustomers()">Refresh</button>
       <div style="float: right;">
         <filter-input
-          v-bind:criteriaOptions="filterCriteriaOptions"
-          v-bind:initialCriteria="filterCriteria"
-          v-on:update-criteria="updateCriteria"
-          v-on:update-filter-term="updateFilterTerm" />
+          :criteriaOptions="filterCriteriaOptions"
+          :initialCriteria="filterCriteria"
+          :filterTermFromParent="''"
+          @update-criteria="updateCriteria"
+          @update-filter-term="updateFilterTerm" />
       </div>
     </div>
     <span class="table-subtitle">Click a last name to manage Orders</span>
