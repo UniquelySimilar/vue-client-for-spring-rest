@@ -19,28 +19,6 @@ const stateList = [
     "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
 ]
 
-// Process AJAX error during login attempt
-const processAjaxLoginError = function(error) {
-    let errorMsg = "";
-    if (error.response) {
-        if (error.response.status == 401) {
-            errorMsg = error.response.data.message;
-        }
-        else {
-            console.error("Response contains error code " + error.response.status);
-        }
-    }
-    else if (error.request) {
-        console.error("No response received so logging request");
-        console.error(error.request);
-    }
-    else {
-        console.error("Problem with request: " + error.message);
-    }
-
-    return errorMsg;
-}
-
 const processValidationErrors = function(error) {
     let retVal = [];
     if (error.response) {
@@ -51,25 +29,6 @@ const processValidationErrors = function(error) {
         }
     }
     return retVal;
-}
-
-const processAjaxAuthError = function(error, router) {
-    if (error.response) {
-        if (error.response.status == 401) {
-            console.log("401 error so redirect to login");
-            router.push("/login");
-        }
-        else {
-            console.error("Response contains error code " + error.response.status);
-        }
-    }
-    else if (error.request) {
-        console.error("No response received so logging request");
-        console.error(error.request);
-    }
-    else {
-        console.error("Problem with request: " + error.message);
-    }
 }
 
 const getOrderStatusStr = function(status) {
@@ -138,8 +97,6 @@ export {
     productRestUrl,
     productTypeRestUrl,
     axios,
-    processAjaxLoginError,
-    processAjaxAuthError,
     processValidationErrors,
     getOrderStatusStr,
     getValidationError,

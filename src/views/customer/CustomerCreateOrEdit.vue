@@ -114,11 +114,11 @@
     import {
         customerRestUrl,
         axios,
-        processAjaxAuthError,
         processValidationErrors,
         getValidationError,
         stateList
     } from '../../globalvars.js';
+    import processRequestErrors from '@/mixins/process-request-errors.js'
 
     import DigitsInput from '../../components/DigitsInput.vue';
 
@@ -127,6 +127,7 @@
         components: {
             DigitsInput
         },
+        mixins: [processRequestErrors],
         props: {
             customerId: {
                 type: Number,
@@ -188,7 +189,7 @@
                 .catch(error => {
                     this.validationErrors = processValidationErrors(error);
                     if (this.validationErrors.length === 0) {
-                        processAjaxAuthError(error, this.$router);
+                        this.processAjaxAuthError(error, this.$router);
                     }
                 });
             },
@@ -212,7 +213,7 @@
                     //console.log(JSON.stringify(this.customer));
                 })
                 .catch(error => {
-                    processAjaxAuthError(error, this.$router);
+                    this.processAjaxAuthError(error, this.$router);
                 });
             }
         }

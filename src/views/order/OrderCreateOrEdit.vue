@@ -65,10 +65,10 @@
     import {
         orderRestUrl,
         axios,
-        processAjaxAuthError,
         processValidationErrors,
         getValidationError
     } from '../../globalvars.js';
+    import processRequestErrors from '@/mixins/process-request-errors.js'
 
     import Datepicker from '../../components/Datepicker.vue';
 
@@ -77,6 +77,7 @@
         components: {
             'datepicker': Datepicker
         },
+        mixins: [processRequestErrors],
         props: {
             orderId: {
                 type: Number,
@@ -168,7 +169,7 @@
                 .catch(error => {
                     this.validationErrors = processValidationErrors(error);
                     if (this.validationErrors.length === 0) {
-                        processAjaxAuthError(error, this.$router);
+                        this.processAjaxAuthError(error, this.$router);
                     }
                 });
             },
@@ -185,7 +186,7 @@
                     this.order = response.data;
                 })
                 .catch( error => {
-                    processAjaxAuthError(error, this.$router);
+                    this.processAjaxAuthError(error, this.$router);
                 });
             }
         }

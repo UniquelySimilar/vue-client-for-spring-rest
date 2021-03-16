@@ -27,7 +27,8 @@
 </template>
 
 <script>
-    import { loginUrl, axios, processAjaxLoginError } from '../globalvars.js'
+    import { loginUrl, axios } from '@/globalvars.js'
+    import processRequestErrors from '@/mixins/process-request-errors.js'
 
     export default {
         name: 'Login',
@@ -38,6 +39,7 @@
                 errorMsg: ''
             }
         },
+        mixins: [processRequestErrors],
         methods: {
             login() {
                 axios.post(loginUrl, {
@@ -59,7 +61,7 @@
                     this.$router.push("/customers")
                 })
                 .catch(error => {
-                    this.errorMsg = processAjaxLoginError(error);
+                    this.errorMsg = this.processAjaxLoginError(error);
                 })
             }
         },

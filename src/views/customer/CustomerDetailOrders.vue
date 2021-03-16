@@ -67,13 +67,15 @@
 
 <script>
     import OrderIndex from '../order/OrderIndex.vue'
-    import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+    import { customerRestUrl, axios } from '../../globalvars.js'
+    import processRequestErrors from '@/mixins/process-request-errors.js'
 
     export default {
         name: "CustomerDetailOrders",
         components: {
             OrderIndex
         },
+        mixins: [processRequestErrors],
         props: {
             customerId: {
                 type: Number,
@@ -113,7 +115,7 @@
                 });
             })
             .catch(error => {
-                processAjaxAuthError(error, this.$router);
+                this.processAjaxAuthError(error, this.$router);
             });
         }
     }

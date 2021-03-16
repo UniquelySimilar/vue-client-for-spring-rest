@@ -59,10 +59,10 @@
     lineItemRestUrl,
     productRestUrl,
     axios,
-    processAjaxAuthError,
     processValidationErrors,
     getValidationError
   } from '@/globalvars.js';
+  import processRequestErrors from '@/mixins/process-request-errors.js'
 
   import ProductSelectModal from '@/components/ProductSelectModal.vue'
 
@@ -71,6 +71,7 @@
     components: {
       ProductSelectModal
     },
+    mixins: [processRequestErrors],
     data() {
       return {
         lineItem: {
@@ -131,7 +132,7 @@
           this.lineItem.unitPrice = parseFloat(this.lineItem.unitPrice).toFixed(2);
         })
         .catch( error => {
-          processAjaxAuthError(error, this.$router);
+          this.processAjaxAuthError(error, this.$router);
         });
       },
       submitForm() {
@@ -151,7 +152,7 @@
         .catch(error => {
           this.validationErrors = processValidationErrors(error);
           if (this.validationErrors.length === 0) {
-            processAjaxAuthError(error, this.$router);
+            this.processAjaxAuthError(error, this.$router);
           }
         });
       },
@@ -172,7 +173,7 @@
           this.productModal = true;
         })
         .catch( error => {
-          processAjaxAuthError(error, this.$router);
+          this.processAjaxAuthError(error, this.$router);
         })
       },
       selectProduct(selectedProduct) {

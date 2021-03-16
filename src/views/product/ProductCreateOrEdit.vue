@@ -66,10 +66,10 @@
   import {
     productRestUrl,
     axios,
-    processAjaxAuthError,
     processValidationErrors,
     getValidationError
   } from '@/globalvars.js'
+  import processRequestErrors from '@/mixins/process-request-errors.js'
 
   export default {
     props: {
@@ -78,6 +78,7 @@
         required: false
       }
     },
+    mixins: [processRequestErrors],
     data() {
       return {
         product: {
@@ -124,7 +125,7 @@
           }
         })
         .then( response => this.product = response.data )
-        .catch( error => processAjaxAuthError(error, this.$router) );
+        .catch( error => this.processAjaxAuthError(error, this.$router) );
       },
       saveOrUpdate() {
         axios({
@@ -142,7 +143,7 @@
         .catch( error => {
           this.validationErrors = processValidationErrors(error);
           if (this.validationErrors.length === 0) {
-            processAjaxAuthError(error, this.$router);
+            this.processAjaxAuthError(error, this.$router);
           }
         });
       },

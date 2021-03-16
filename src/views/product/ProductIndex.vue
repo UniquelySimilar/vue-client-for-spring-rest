@@ -70,9 +70,9 @@
     productRestUrl,
     axios,
     processValidationErrors,
-    getErrorMessage,
-    processAjaxAuthError
+    getErrorMessage
   } from '@/globalvars.js'
+  import processRequestErrors from '@/mixins/process-request-errors.js'
 
   export default {
     components: {
@@ -81,6 +81,7 @@
       DeleteModal,
       FilterInput
     },
+    mixins: [processRequestErrors],
     data() {
       return {
         products: [],
@@ -122,7 +123,7 @@
           this.filteredProducts = this.products;
           this.productsFilteredByType = [...this.products];
         })
-        .catch( error => processAjaxAuthError(error, this.$router) );
+        .catch( error => this.processAjaxAuthError(error, this.$router) );
       },
       getProductTypesFilterFromStore() {
         this.productTypesFilter = this.$store.state.productTypesFilter;
@@ -214,7 +215,7 @@
         .catch( error => {
           this.errorMessages = processValidationErrors(error);
           if (this.errorMessages.length == 0) {
-            processAjaxAuthError(error, this.$router);
+            this.processAjaxAuthError(error, this.$router);
           }
         });
       },

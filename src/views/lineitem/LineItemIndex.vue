@@ -46,7 +46,9 @@
 </template>
 
 <script>
-  import { lineItemRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+  import { lineItemRestUrl, axios } from '../../globalvars.js'
+  import processRequestErrors from '@/mixins/process-request-errors.js'
+
   import DeleteModal from '../../components/DeleteModal.vue';
 
   export default {
@@ -54,6 +56,7 @@
     components: {
       DeleteModal
     },
+    mixins: [processRequestErrors],
     data() {
       return {
         lineItems: this.initialLineItems,
@@ -99,7 +102,7 @@
           })
         })
         .catch( error => {
-          processAjaxAuthError(error, this.$router);
+          this.processAjaxAuthError(error, this.$router);
         })
       },
       lineItemTotal(unitPrice, quantity) {

@@ -70,7 +70,8 @@
 </template>
 
 <script>
-  import { customerRestUrl, axios, processAjaxAuthError } from '../../globalvars.js'
+  import { customerRestUrl, axios } from '../../globalvars.js'
+  import processRequestErrors from '@/mixins/process-request-errors.js'
   import FilterInput from '../../components/FilterInput.vue'
   import PaginationControl from '../../components/PaginationControl.vue'
   import PageSelect from '../../components/PageSelect.vue'
@@ -99,6 +100,7 @@
       PageSelect,
       DeleteModal
     },
+    mixins: [processRequestErrors],
     computed: {
       token() {
         return this.$store.state.token;
@@ -144,7 +146,7 @@
             this.ascSort = true;
           })
           .catch(error => {
-            processAjaxAuthError(error, this.$router);
+            this.processAjaxAuthError(error, this.$router);
           })
       },
       incrementPage() {
@@ -246,7 +248,7 @@
           this.unfilteredCustomers = this.customers.slice();
         })
         .catch(error => {
-          processAjaxAuthError(error, this.$router);
+          this.processAjaxAuthError(error, this.$router);
         })
       },
       pageSelectChange(newPage) {

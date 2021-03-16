@@ -52,7 +52,8 @@
 </template>
 
 <script>
-  import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr } from '../../globalvars.js'
+  import { orderRestUrl, axios, getOrderStatusStr } from '../../globalvars.js'
+  import processRequestErrors from '@/mixins/process-request-errors.js'
   import LineItemIndex from '../lineitem/LineItemIndex.vue'
 
   export default {
@@ -68,6 +69,7 @@
         }
       }
     },
+    mixins: [processRequestErrors],
     props: {
       orderId: {
         type: Number,
@@ -102,7 +104,7 @@
             lineItem.unitPrice = parseFloat(lineItem.unitPrice).toFixed(2);
            });
         })
-        .catch( error => processAjaxAuthError(error, this.$router) )
+        .catch( error => this.processAjaxAuthError(error, this.$router) )
       },
       getOrderStatusStr
     },

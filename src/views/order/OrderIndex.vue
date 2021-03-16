@@ -46,7 +46,9 @@
 </template>
 
 <script>
-    import { orderRestUrl, axios, processAjaxAuthError, getOrderStatusStr } from '../../globalvars.js'
+    import { orderRestUrl, axios, getOrderStatusStr } from '../../globalvars.js'
+    import processRequestErrors from '@/mixins/process-request-errors.js'
+
     import DeleteModal from '../../components/DeleteModal.vue'
 
     export default {
@@ -54,6 +56,7 @@
         components: {
             DeleteModal
         },
+        mixins: [processRequestErrors],
         props: {
             customerId: {
                 type: Number,
@@ -100,7 +103,7 @@
                     });
                 })
                 .catch(error => {
-                    processAjaxAuthError(error, this.$router);
+                    this.processAjaxAuthError(error, this.$router);
                 });
             },
             getOrderStatusStr
